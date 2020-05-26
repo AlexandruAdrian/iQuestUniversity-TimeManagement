@@ -1,6 +1,8 @@
 :root {
-  --primary-color: #025AA2;
-  --secondary-color: #E6505C;
+  --primary-color: rgb(2, 90, 162);
+  --secondary-color: rgb(230, 80, 92);
+  --primary-hover-bg: rgba(2, 90, 162, .85);
+  --secondary-hover-bg: rgba(230, 80, 92, .85);
   --font: 'Roboto', 'sans-serif';
 }
 
