@@ -1,12 +1,19 @@
 {
   "users": [
     {
-      "username": "test",
-      "password": "12345"
+      "username": "Alexandru",
+      "password": "12345",
+      "pathToProfile": "/images/profile/1.jpg"
     },
     {
-      "username": "test2",
-      "password": "54321"
+      "username": "Elise",
+      "password": "54321",
+      "pathToProfile": "/images/profile/2.jpg"
+    },
+    {
+      "username": "Marshall",
+      "password": "mathers",
+      "pathToProfile": "/images/profile/3.jpg"
     }
   ]
 }
