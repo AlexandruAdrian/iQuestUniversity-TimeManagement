@@ -40,7 +40,7 @@ input {
   padding: 5px 3px;
   text-align: center;
   margin-top: 15px;
-  border-radius: 5px;
+  border-radius: var(--main-border-radius);
   border: 1px solid var(--primary-color);
   min-width: 200px;
 }
@@ -52,26 +52,14 @@ input {
   color: red;
 }
 
-button {
-  margin-top: 10px;
-  border-radius: 5px;
-  min-width: 200px;
-  padding: 8px 0px;
+form > button {
   background-color: var(--secondary-color);
-  color: #ffffff;
-  border: none;
+  margin-top: 10px;
 }
 
-button:hover {
-  cursor: pointer;
+form > button:hover {
   background-color: var(--secondary-hover-bg);
 }
 
-footer {
-  padding: 5px 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  color: var(--primary-color);
-  font-size: 12px;
-}
+
+
