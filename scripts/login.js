@@ -1,4 +1,9 @@
-window.onload = (() => {
+import { isLoggedIn } from "./modules/user.js";
+
+(() => {
+  if (isLoggedIn()) {
+    window.location.pathname = "/dashboard.html"
+  }
   const button = document.querySelector("button");
   const inputs = document.querySelectorAll("input");
 
@@ -25,6 +30,7 @@ async function handleSubmit(e) {
       error.innerHTML = "Wrong username or password";
     } else {
       localStorage.setItem('user', user)
+      window.location.pathname = '/dashboard.html';
     }
   } else {
     error.innerHTML = "Wrong username or password";
@@ -39,7 +45,7 @@ function validateLogin(username = "", password = "") {
   return true;
 }
 
-async function checkUser(username = "", password = "", error) {
+async function checkUser(username = "", password = "") {
   const data = await fetch("../data.json");
   const { users } = await data.json();
 
