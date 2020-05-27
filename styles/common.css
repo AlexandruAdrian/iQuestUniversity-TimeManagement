@@ -3,13 +3,15 @@
   --secondary-color: rgb(230, 80, 92);
   --primary-hover-bg: rgba(2, 90, 162, .85);
   --secondary-hover-bg: rgba(230, 80, 92, .85);
-  --font: 'Roboto', 'sans-serif';
+  --main-border-radius: 5px;
+  --font: 'Open Sans', sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline: 0;
   font-family: var(--font);
 }
 
@@ -26,4 +28,23 @@ body {
   width: 1px;
   height: 1px;
   display: block;
+}
+
+button {
+  border-radius: var(--main-border-radius);
+  min-width: 200px;
+  padding: 8px 0px;
+  color: #ffffff;
+  border: none;
+  transition: background-color .5s;
+  cursor: pointer;
+}
+
+footer {
+  padding: 5px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 12px;
 }
