@@ -1,7 +1,4 @@
 (() => {
-  if (isLoggedIn()) {
-    window.location.href = "./dashboard.html"
-  }
   const button = document.querySelector("button");
   const inputs = document.querySelectorAll("input");
 
@@ -35,13 +32,6 @@ async function handleSubmit(e) {
   }
 }
 
-function isLoggedIn() {
-  const user = localStorage.getItem('user');
-  if (!user) {
-    return false;
-  }
-  return true;
-}
 
 function validateLogin(email = "", password = "") {
   if (email.trim().length === 0 || password.trim().length === 0) {

@@ -1,10 +1,6 @@
 (async () => {
-  if (!isLoggedIn()) {
-    window.location.href = "./login.html";
-  }
   // Fetch user data
   const user = await getUserData();
-  console.log(user);
 
   // Display user data on the dashboard header
   const htmlUser = document.querySelector(".user").firstElementChild;
@@ -15,14 +11,6 @@
   const mobileMenuTrigger = document.querySelector(".mobile-menu-trigger");
   mobileMenuTrigger.addEventListener("click", openMobileMenu);
 })();
-
-function isLoggedIn() {
-  const user = localStorage.getItem('user');
-  if (!user) {
-    return false;
-  }
-  return true;
-}
 
 async function getUserData() {
   const email = localStorage.getItem('user');
