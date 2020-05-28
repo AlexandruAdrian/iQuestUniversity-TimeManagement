@@ -85,3 +85,109 @@ header {
   background-color: var(--secondary-hover-bg);
 }
 /* End mobile nav styles */
+
+/* Dashboard <main> styles */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main .btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  margin-top: 20px;
+  min-width: 150px;
+}
+
+main .btn span {
+  margin-right: 5px;
+}
+
+main .btn:hover {
+  background-color: var(--primary-hover-bg);
+}
+
+main .container {
+  border-radius: var(--main-border-radius);
+  background-color: #f0f2f5;
+  padding: 0;
+  margin-top: 20px;
+}
+
+main .container h2 {
+  display: none;
+}
+
+.task-list-header {
+  display: flex;
+  flex-direction: column;
+  border-top-right-radius: var(--main-border-radius);
+  border-top-left-radius: var(--main-border-radius);
+  padding: 7px;
+  font-size: 14px;
+  height: auto;
+}
+
+.task-list-header form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.task-list-header form input {
+  width: 50px;
+  height: 20px;
+  text-align: center;
+  border-radius: var(--main-border-radius);
+  border: none;
+  padding: 2px;
+  margin-right: 5px;
+}
+
+.task-list-header form button {
+  border: none;
+  background: var(--primary-color);
+  color: var(--primary-color);
+  background: red;
+  border-radius: var(--main-border-radius);
+  background: #fff;
+  cursor: pointer;
+  width: 50px;
+  height: 20px;
+}
+
+.task-list {
+  padding: 7px 2px; 
+  list-style-type: none;
+}
+
+.task {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0px 3px;
+  border-radius: var(--main-border-radius);
+}
+
+.task-title {
+  width: 100%;
+  background: #fff;
+  padding: 2px 4px;
+  border-radius: var(--main-border-radius);
+}
+
+.task-description {
+  background-color: #fff;
+  padding: 2px 4px;
+  border-radius: var(--main-border-radius);
+  margin-top: 5px;
+}
+
+.warning {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+/* End dashboard <main> styles */

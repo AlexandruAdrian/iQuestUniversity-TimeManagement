@@ -32,7 +32,6 @@ async function handleSubmit(e) {
   }
 }
 
-
 function validateLogin(email = "", password = "") {
   if (email.trim().length === 0 || password.trim().length === 0) {
     return false;
