@@ -1,20 +1,37 @@
-import { isLoggedIn, getUserData } from "./modules/user.js";
-
 (async () => {
   if (!isLoggedIn()) {
-    window.location.pathname = "/login.html";
+    window.location.href = "./login.html";
   }
   // Fetch user data
-  const { username, pathToProfile } = await getUserData();
+  const user = await getUserData();
+  console.log(user);
+
   // Display user data on the dashboard header
   const htmlUser = document.querySelector(".user").firstElementChild;
   const htmlAvatar = document.querySelector(".avatar").firstElementChild;
-  htmlUser.innerHTML = username;
-  htmlAvatar.setAttribute("src", pathToProfile);
+  htmlUser.innerHTML = `${user.first_name} ${user.last_name}`;
+  htmlAvatar.setAttribute("src", user.avatar);
   // Handle mobile menu
   const mobileMenuTrigger = document.querySelector(".mobile-menu-trigger");
   mobileMenuTrigger.addEventListener("click", openMobileMenu);
 })();
+
+function isLoggedIn() {
+  const user = localStorage.getItem('user');
+  if (!user) {
+    return false;
+  }
+  return true;
+}
+
+async function getUserData() {
+  const email = localStorage.getItem('user');
+  const data = await fetch('https://reqres.in/api/users?page=1');
+  const { data: users } = await data.json();
+  const user = users.find(user => user.email === email);
+
+  return user;
+}
 
 function openMobileMenu() {
   // Select mobile menu and show it
@@ -38,7 +55,7 @@ function closeMobileMenu() {
 
 function handleLogOut() {
   localStorage.clear();
-  window.location.pathname = "/login.html";
+  window.location.href = "./login.html";
 }
 
 function toggleClass(element, removeClass, addClass) {

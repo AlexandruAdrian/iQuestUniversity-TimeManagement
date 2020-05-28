@@ -1,4 +1,4 @@
-window.onload = (() => {
+(() => {
   if (isLoggedIn()) {
     window.location.href = "./dashboard.html"
   }
