@@ -8,6 +8,7 @@
 
 function handleFocus() {
   const error = document.querySelector(".error");
+  this.classList.remove("input-error");
   error.innerHTML = "";
 }
 
@@ -29,6 +30,8 @@ async function handleSubmit(e) {
     }
   } else {
     error.innerHTML = "Wrong username or password";
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach(input => input.classList.add("input-error"));
   }
 }
 

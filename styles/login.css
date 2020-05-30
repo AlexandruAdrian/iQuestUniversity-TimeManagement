@@ -13,7 +13,6 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
 }
 
 main > h1 {
@@ -36,13 +35,6 @@ input {
   min-width: 200px;
 }
 
-.error {
-  margin-top: 10px;
-  font-size: 14px;
-  height: 20px;
-  color: red;
-}
-
 form > button {
   background-color: var(--secondary-color);
   margin-top: 10px;
@@ -52,5 +44,8 @@ form > button:hover {
   background-color: var(--secondary-hover-bg);
 }
 
-
-
+.error {
+  margin-top: 10px;
+  height: 20px;
+  color: red;
+}

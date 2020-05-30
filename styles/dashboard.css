@@ -1,24 +1,38 @@
+body {
+  background-color: #f2f0f5;
+}
+
 /* Header styles */
-header {
+.dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
   width: 100%;
-  height: 50px;
+  height: 45px;
   background-color: var(--primary-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
   color: #fff;
 }
 
 .mobile-menu-trigger {
   cursor: pointer;
+  height: 100%;
+  width: 45px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .user {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  height: 100%;
+  margin-right: 10px;
 }
 
 .user > p {
@@ -48,15 +62,16 @@ header {
 }
 
 .mobile-menu {
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: left .5s;
+  transition: left .5s ease;
+  z-index: 999;
 }
 
 .close-mobile-menu {
@@ -91,6 +106,9 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 70px;
 }
 
 main .btn {
@@ -110,84 +128,422 @@ main .btn:hover {
 
 main .container {
   border-radius: var(--main-border-radius);
-  background-color: #f0f2f5;
   padding: 0;
-  margin-top: 20px;
+  height: 100%;
 }
 
-main .container h2 {
-  display: none;
-}
-
-.task-list-header {
+main .container header {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  border-top-right-radius: var(--main-border-radius);
-  border-top-left-radius: var(--main-border-radius);
-  padding: 7px;
-  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+main .container figure {
+  width: 45px;
   height: auto;
 }
 
-.task-list-header form {
+main .container figure img {
+  width: 100%;
+  height: auto;
+}
+
+main .container header h1 {
+  margin-left: 10px;
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+main .container header h1 span {
+  color: var(--secondary-color)
+}
+
+/* Task list  styles */
+main .container > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  height: auto;
+  padding: 10px 8px;
+  color: #fff;
+  border: 1px solid var(--primary-color);
+  margin-top: 20px;
+}
+
+main .container > div > p {
+  font-weight: bold;
+}
+
+main .container > div form {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
   width: 100%;
+  height: auto;
+  margin-top: 10px;
 }
 
-.task-list-header form input {
-  width: 50px;
-  height: 20px;
+main .container > div form input {
+  width: 40px;
+  height: 25px;
   text-align: center;
   border-radius: var(--main-border-radius);
   border: none;
-  padding: 2px;
-  margin-right: 5px;
+  padding: 1px 2px;
 }
 
-.task-list-header form button {
-  border: none;
-  background: var(--primary-color);
-  color: var(--primary-color);
-  background: red;
-  border-radius: var(--main-border-radius);
-  background: #fff;
-  cursor: pointer;
+main .container > div form button {
   width: 50px;
-  height: 20px;
+  height: 25px;
+  color: var(--primary-color);
+  background-color: #fff;
+  border: none;
+  border-radius: var(--main-border-radius);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+
+main .container > div form button:hover {
+  box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.75);
+}
+
+.no-tasks {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
 }
 
 .task-list {
-  padding: 7px 2px; 
-  list-style-type: none;
+  width: 100%;
+  height: auto;
+  border: 1px solid #000;
+  border-top: none;
+  border-bottom: none;
+  background-color: #fff;
 }
 
-.task {
+.task-list li {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 0px 3px;
-  border-radius: var(--main-border-radius);
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-preview {
+  display: flex;
+  text-align: center;
+  height: 40px;
+  cursor: pointer;
+  border-bottom: 1px solid #000;
+  transition: all .3s ease;
+}
+
+.task-preview:hover {
+  box-shadow: 0px 0px 3px 2px rgba(0,0,0,0.75);
+}
+
+.dropdown {
+  height: 100%;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .5s ease;
+}
+
+.dropdown-active {
+  transform: rotate(-180deg);
+}
+
+.task-preview > p {
+  width: calc(100% - 95px);
+  height: 100%;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 40px;
+  font-weight: bold;
+}
+
+.task-preview:hover .options {
+  visibility: visible;
+}
+
+.options {
+  height: 100%;
+  margin-left: auto;
+  width: 65px;
+  display: flex;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  visibility: hidden;
+}
+
+.options span {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  cursor: pointer;
+  transition: background-color .3s ease;
+}
+
+.options span:first-child {
+  color: var(--primary-color);
+}
+
+.options span:last-child {
+  color: var(--secondary-color);
+}
+
+.options span:first-child:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.options span:last-child:hover {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+.task-details {
+  width: 100%;
+  background: #f2f0f5;
+  padding: 0px 7px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .3s ease-in-out;
+  box-shadow: inset 0px 0px 2px;
+} 
+
+.task-details-active {
+  max-height: 999px;
+  border-bottom: 1px solid #000;
 }
 
 .task-title {
-  width: 100%;
-  background: #fff;
-  padding: 2px 4px;
-  border-radius: var(--main-border-radius);
+  text-align: center;
+  margin-top: 5px;
 }
 
 .task-description {
-  background-color: #fff;
-  padding: 2px 4px;
-  border-radius: var(--main-border-radius);
-  margin-top: 5px;
+  text-indent: 20px;
+  margin-top: 15px;
+  text-align: justify;
+  text-justify: inter-word;
 }
+
+.task-details > div {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.task-details > div span {
+  color: var(--primary-color);
+  margin-right: 5px;
+}
+
+main .container footer {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: 1px solid var(--primary-color);
+  justify-content: flex-start;
+  padding: 10px 5px;
+  width: 100%;
+}
+
+main .container footer span {
+  font-weight: bold;
+}
+/* End of task list styles */
 
 .warning {
   background-color: var(--secondary-color);
   color: #fff;
 }
 
+.warning .options {
+  background: linear-gradient(to right, var(--secondary-color), #FDE1E2);
+}
+
+/* Highlight the title and the duration aswell */
+.warning + .task-details > div p:first-child, 
+.warning + .task-details > div p:first-child span,
+.warning + .task-details .task-title {
+  color: var(--secondary-color);
+}
 /* End dashboard <main> styles */
+
+/* Modal styles (add/edit form) */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visbility 0s, opacity 0.5s ease;
+}
+
+.modal-bg-active {
+  visibility: visible;
+  opacity: 1
+}
+
+.task-form-container {
+  position: relative;
+  width: 95%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 15px 10px;
+  border-radius: var(--main-border-radius);
+}
+
+.task-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.task-form-container div label {
+  margin-bottom: 5px;
+}
+
+.task-form {
+  width: 90%;
+}
+
+input, textarea {
+  border: 1px solid var(--primary-color);
+}
+
+.task-form label {
+  font-weight: bold;
+}
+
+.task-form-input {
+  margin-bottom: 20px;
+  border-radius: var(--main-border-radius);
+  padding: 5px;
+  width: 100%;
+}
+
+.task-form div textarea {
+  resize: none;
+  min-height: 150px;
+  text-align: left;
+}
+
+.task-time {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.task-time div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45%;
+}
+
+.task-time div label {
+  text-align: center;
+  margin-right: 9px;
+}
+
+.task-time div input {
+  width: 50px;
+  border-radius: var(--main-border-radius);
+  text-align: center;
+  padding: 5px;
+}
+
+.task-form .btn {
+  width: 100%;
+  background-color: var(--primary-color);
+}
+
+.task-form .btn:hover  {
+  background-color: var(--primary-hover-bg);
+}
+
+.task-form .error {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.close-task-form {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #fff;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+/* End of modal styles */
+
+/* Add task btn style */
+.add-task-btn {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 50px;
+  height: 50px;
+  background-color: var(--secondary-color);
+  border-radius: 100%;
+  text-align: center;
+  line-height: 20px;
+  border: none;
+  color: #fff;
+  font-size: 50px; 
+  cursor: pointer;
+  z-index: 4;
+  box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
+}
+
+.add-task-btn:hover {
+  background: var(--secondary-hover-bg);
+}
+/* End of task btn styles */
+
+.error {
+  height: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  color: red;
+}
+
+.error p {
+  text-align: left;
+}

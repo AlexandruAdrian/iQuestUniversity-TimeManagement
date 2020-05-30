@@ -1,20 +1,20 @@
-// (() => {
-//   if (window.location.href.includes("login.html") && isLoggedIn()) {
-//     window.location.href = "./dashboard.html";
-//     return;
-//   } else if (window.location.pathname.includes("dashboard.html") && !isLoggedIn()) {
-//     window.location.href = "./login.html";
-//     return;
-//   }
+(() => {
+  // if (window.location.href.includes("login.html") && isLoggedIn()) {
+  //   window.location.href = "./dashboard.html";
+  //   return;
+  // } else if (window.location.pathname.includes("dashboard.html") && !isLoggedIn()) {
+  //   window.location.href = "./login.html";
+  //   return;
+  // }
 
-//   if (window.location.pathname.includes("dashboard.html") && isLoggedIn()) {
-//     displayUserData().catch(err => {
-//       alert(err);
-//       localStorage.clear();
-//       window.location.href = "./login.html";
-//     });
-//   }
-// })();
+  // if (window.location.pathname.includes("dashboard.html") && isLoggedIn()) {
+  //   displayUserData().catch(err => {
+  //     alert(err);
+  //     localStorage.clear();
+  //     window.location.href = "./login.html";
+  //   });
+  // }
+})();
 
 // function isLoggedIn() {
 //   const user = localStorage.getItem('user');
