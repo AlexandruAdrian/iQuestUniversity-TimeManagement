@@ -35,6 +35,10 @@ class TaskList {
     })
   }
 
+  getTask(id) {
+    return this.#tasks.find(task => task.getId() === id);
+  }
+
   getTasks() { return this.#tasks; }
   getTasksLength() { return this.#tasks.length };
   getTimeLimit() { return this.#timeLimit; }
@@ -45,13 +49,24 @@ class TaskList {
     this.#timeLimit.min = minutes;
   }
 
-  setTotalHrs(hours, minutes) {
-    this.#totalHrs.hrs += hours;
-    this.#totalHrs.min += minutes;
-    if (this.#totalHrs.min > 59) {
-      this.#totalHrs.hrs += 1;
-      this.#totalHrs.min %= 60;
+  setTotalHrs(hours, minutes, add) {
+    if (add) {
+      this.#totalHrs.hrs += hours;
+      this.#totalHrs.min += minutes;
+      if (this.#totalHrs.min > 59) {
+        this.#totalHrs.hrs += 1;
+        this.#totalHrs.min %= 60;
+      }
+    } else {
+      if (this.#totalHrs.min - minutes < 0) {
+        this.#totalHrs.min = 60 - (minutes - this.#totalHrs.min);
+        this.#totalHrs.hrs -= (hours + 1);
+      } else {
+        this.#totalHrs.hrs -= hours;
+        this.#totalHrs.min -= minutes;
+      }
     }
+
   }
 }
 
@@ -112,6 +127,7 @@ const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
 const totalHours = document.getElementById("total-hours");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let taskCtr = 1;
 
 (() => {
   initList();
@@ -191,9 +207,9 @@ function handleTaskCreation(e) {
   const minutesValue = minutesInput.value;
   if (validateTaskForm()) {
     // Create a new task
-    const task = new Task(taskList.getTasksLength() + 1, titleValue, descriptionValue, parseInt(hoursValue), parseInt(minutesValue));
+    const task = new Task(taskCtr++, titleValue, descriptionValue, parseInt(hoursValue), parseInt(minutesValue));
     taskList.addTask(task)
-    taskList.setTotalHrs(task.getHours(), task.getMinutes());
+    taskList.setTotalHrs(task.getHours(), task.getMinutes(), true); // True means addtition, else it means subtraction
     // Reset inputs
     titleInput.value = '';
     descriptionInput.value = '';
@@ -262,9 +278,11 @@ function taskListClickHandler(e) {
       dropdown.classList.remove("dropdown-active");
     }
   } else if (e.target.className.includes("trash")) {
+    // Deletes selected task
     const li = e.target.parentElement.parentElement.parentElement;
+    const task = taskList.getTask(parseInt(li.id));
     taskList.removeTask(parseInt(li.id));
-
+    taskList.setTotalHrs(task.getHours(), task.getMinutes(), false);
     initList();
   }
 }
@@ -341,8 +359,8 @@ function initList() {
     taskList.getTasks().forEach(task => {
       createTask(htmlList, task);
     });
-    totalHours.innerHTML = `${taskList.getTotalHrs().hrs} hrs ${taskList.getTotalHrs().min} min`;
   }
+  totalHours.innerHTML = `${taskList.getTotalHrs().hrs} hrs ${taskList.getTotalHrs().min} min`;
 }
 
 function createTask(list, task) {
