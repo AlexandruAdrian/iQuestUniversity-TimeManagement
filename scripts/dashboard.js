@@ -112,7 +112,11 @@ const addTaskBtn = document.querySelector(".add-task-btn");
 const closeForm = document.querySelector(".close-task-form");
 const limitHrs = document.getElementById("hours");
 const limitMins = document.getElementById("minutes");
-const timeLimitBtn = document.getElementById("set-time-limit");
+const setLimitContainer = document.querySelector(".set");
+const unsetLimitContainer = document.querySelector(".unset");
+const setLimitBtn = document.getElementById("set-time-limit");
+const unsetLimitBtn = document.getElementById("unset-time-limit");
+const timeLimit = document.getElementById("time-limit");
 const formModal = document.querySelector(".modal-bg");
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
@@ -143,7 +147,8 @@ function initEventHandlers() {
   limitMins.addEventListener("focus", handleFocus);
   limitHrs.addEventListener("blur", handleBlur);
   limitMins.addEventListener("blur", handleBlur);
-  timeLimitBtn.addEventListener("click", handleTimeLimit);
+  setLimitBtn.addEventListener("click", handleSetBtn);
+  unsetLimitBtn.addEventListener("click", handleUnsetBtn);
   // Task list
   htmlList.addEventListener("click", handleTaskListClick);
 }
@@ -232,18 +237,27 @@ function handleTaskEdit(e) {
   initList();
 }
 
-function handleTimeLimit(e) {
+function handleSetBtn(e) {
   e.preventDefault();
   const setHours = document.getElementById("hours");
   const setMinutes = document.getElementById("minutes");
   if (validateInput(setHours) && validateInput(setMinutes)) {
     const hours = parseInt(setHours.value);
     const minutes = parseInt(setMinutes.value);
-    const timeLimit = document.getElementById("time-limit");
     taskList.setTimeLimit(hours, minutes);
-    timeLimit.innerHTML = `Current set limit: ${hours}hrs ${minutes}min`;
+    timeLimit.innerHTML = `Current set limit: ${hours} hrs ${minutes} min`;
+    toggleClass(setLimitContainer, "time-limit-active", "set-inactive")
+    toggleClass(unsetLimitContainer, "unset-inactive", "time-limit-active");
     initList(); // refresh the list
   }
+}
+
+function handleUnsetBtn() {
+  taskList.setTimeLimit(999999, 0);
+  toggleClass(unsetLimitContainer, "time-limit-active", "unset-inactive");
+  toggleClass(setLimitContainer, "set-inactive", "time-limit-active")
+  timeLimit.innerHTML = `Current set limit: none`;
+  initList(); // refresh the list
 }
 // Adding / editing a task form handlers
 function handleFocus() {

@@ -161,33 +161,53 @@ main .container header h1 span {
 
 /* Task list  styles */
 main .container > div {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   background-color: var(--primary-color);
-  height: auto;
-  padding: 10px 8px;
+  height: 40px;
+  overflow: hidden;
   color: #fff;
   border: 1px solid var(--primary-color);
   margin-top: 20px;
 }
 
-main .container > div > p {
-  font-weight: bold;
+.set {
+  position: absolute;
+  display: flex;
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  transition: top .5s ease;
 }
 
-main .container > div form {
+.set-inactive {
+  top: -40px;
+}
+
+.time-limit-active {
+  top: 0px;
+}
+
+.unset-inactive {
+  top: 40px;
+}
+
+.unset {
+  position: absolute;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: auto;
-  margin: 10px 0px;
+  width: 90%;
+  height: 40px;
+  transition: top .5s ease;
 }
 
-main .container > div form input {
+main .container .set input {
   width: 40px;
   height: 25px;
   text-align: center;
@@ -195,7 +215,7 @@ main .container > div form input {
   padding: 1px 2px;
 }
 
-main .container > div form button {
+main .container div button {
   width: 50px;
   height: 25px;
   color: var(--primary-color);
@@ -207,10 +227,6 @@ main .container > div form button {
   transition: all .3s ease;
 }
 
-main .container > div form button:hover {
-  box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.75);
-}
-
 .no-tasks {
   width: 100%;
   text-align: center;
@@ -220,9 +236,7 @@ main .container > div form button:hover {
 .task-list {
   width: 100%;
   height: auto;
-  border: 1px solid #000;
-  border-top: none;
-  border-bottom: none;
+  border: none;
   background-color: #fff;
 }
 
@@ -256,7 +270,7 @@ main .container > div form button:hover {
 }
 
 .dropdown-active {
-  transform: rotateZ(-180deg);
+  transform: rotate(180deg);
 }
 
 .task-preview > p {
@@ -296,20 +310,20 @@ main .container > div form button:hover {
 }
 
 .options span:first-child {
-  color: var(--primary-color);
+  color: dodgerblue;
 }
 
 .options span:last-child {
-  color: var(--secondary-color);
+  color: red;
 }
 
 .options span:first-child:hover {
-  background-color: var(--primary-color);
+  background-color: dodgerblue;
   color: #fff;
 }
 
 .options span:last-child:hover {
-  background-color: var(--secondary-color);
+  background-color: red;
   color: #fff;
 }
 
@@ -369,12 +383,12 @@ main .container footer span {
 /* End of task list styles */
 
 .warning {
-  background-color: var(--secondary-color);
+  background-color: var(--highlight);
   color: #fff;
 }
 
 .warning .options {
-  background: linear-gradient(to right, var(--secondary-color), #FDE1E2);
+  background: linear-gradient(to right, var(--highlight), #FDE1E2);
 }
 
 /* Highlight the title and the duration aswell */
@@ -530,15 +544,14 @@ input, textarea {
   width: 50px;
   height: 50px;
   background-color: var(--secondary-color);
+  color: #fff;
   border-radius: 100%;
   text-align: center;
   line-height: 20px;
   border: none;
-  color: #fff;
   font-size: 50px; 
   cursor: pointer;
   z-index: 4;
-  box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
 }
 
 .add-task-btn:hover {
