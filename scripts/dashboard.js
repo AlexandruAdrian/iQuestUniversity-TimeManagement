@@ -1,11 +1,16 @@
 class TaskList {
   #tasks;
   #timeLimit;
+  #totalHrs
 
   constructor(tasks = []) {
     this.#tasks = [...tasks];
     this.#timeLimit = {
       hrs: 999999,
+      min: 0
+    }
+    this.#totalHrs = {
+      hrs: 0,
       min: 0
     }
   }
@@ -32,10 +37,21 @@ class TaskList {
 
   getTasks() { return this.#tasks; }
   getTasksLength() { return this.#tasks.length };
-
   getTimeLimit() { return this.#timeLimit; }
-  setTimeLimit(newTimeLimit) {
-    this.#timeLimit = newTimeLimit;
+  getTotalHrs() { return this.#totalHrs; }
+
+  setTimeLimit(hours = 0, minutes = 0) {
+    this.#timeLimit.hrs = hours;
+    this.#timeLimit.min = minutes;
+  }
+
+  setTotalHrs(hours, minutes) {
+    this.#totalHrs.hrs += hours;
+    this.#totalHrs.min += minutes;
+    if (this.#totalHrs.min > 59) {
+      this.#totalHrs.hrs += 1;
+      this.#totalHrs.min %= 60;
+    }
   }
 }
 
@@ -83,6 +99,8 @@ const logOutBtn = mobileMenu.lastElementChild;
 const closeMobileMenuBtn = document.querySelector(".close-mobile-menu");
 const addTaskBtn = document.querySelector(".add-task-btn");
 const closeForm = document.querySelector(".close-task-form");
+const limitHrs = document.getElementById("hours");
+const limitMins = document.getElementById("minutes");
 const timeLimitBtn = document.getElementById("set-time-limit");
 const formModal = document.querySelector(".modal-bg");
 const titleInput = document.getElementById("title");
@@ -90,8 +108,10 @@ const descriptionInput = document.getElementById("description");
 const hoursInput = document.getElementById("task-hrs");
 const minutesInput = document.getElementById("task-mins");
 const submitBtn = document.querySelector(".task-form").lastElementChild;
-const error = document.querySelector(".error");
+const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
+const totalHours = document.getElementById("total-hours");
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 (() => {
   initList();
@@ -107,9 +127,13 @@ function initEventHandlers() {
   addTaskBtn.addEventListener("click", openFormModal);
   closeForm.addEventListener("click", closeFormModal);
   // Set time limit
+  limitHrs.addEventListener("focus", handleFocus);
+  limitMins.addEventListener("focus", handleFocus);
+  limitHrs.addEventListener("blur", handleBlur);
+  limitMins.addEventListener("blur", handleBlur);
   timeLimitBtn.addEventListener("click", handleTimeLimit);
   // Task list
-  htmlList.addEventListener("click", openTaskDetails);
+  htmlList.addEventListener("click", taskListClickHandler);
 }
 
 function openMobileMenu() {
@@ -129,15 +153,21 @@ function closeMobileMenu() {
 function openFormModal() {
   formModal.classList.add("modal-bg-active");
   titleInput.focus();
+
   titleInput.addEventListener("focus", handleFocus);
   descriptionInput.addEventListener("focus", handleFocus);
   hoursInput.addEventListener("focus", handleFocus);
   minutesInput.addEventListener("focus", handleFocus);
+
+  titleInput.addEventListener("blur", handleBlur);
+  descriptionInput.addEventListener("blur", handleBlur);
+  hoursInput.addEventListener("blur", handleBlur);
+  minutesInput.addEventListener("blur", handleBlur);
+
   submitBtn.addEventListener("click", handleTaskCreation);
 }
 
 function closeFormModal() {
-  error.innerHTML = '';
   titleInput.classList.remove("input-error");
   descriptionInput.classList.remove("input-error");
   hoursInput.classList.remove("input-error");
@@ -147,6 +177,9 @@ function closeFormModal() {
   descriptionInput.value = '';
   hoursInput.value = '';
   minutesInput.value = '';
+  errors[0].innerHTML = '';
+  errors[1].innerHTML = '';
+  errors[2].innerHTML = ''
   submitBtn.removeEventListener('click', handleTaskCreation);
 }
 
@@ -158,8 +191,9 @@ function handleTaskCreation(e) {
   const minutesValue = minutesInput.value;
   if (validateTaskForm()) {
     // Create a new task
-    const task = new Task(taskList.getTasksLength() + 1, titleValue, descriptionValue, hoursValue, minutesValue);
+    const task = new Task(taskList.getTasksLength() + 1, titleValue, descriptionValue, parseInt(hoursValue), parseInt(minutesValue));
     taskList.addTask(task)
+    taskList.setTotalHrs(task.getHours(), task.getMinutes());
     // Reset inputs
     titleInput.value = '';
     descriptionInput.value = '';
@@ -173,115 +207,127 @@ function handleTaskCreation(e) {
 
 function handleTimeLimit(e) {
   e.preventDefault();
-  const hours = parseInt(document.getElementById("hours").value);
-  const minutes = parseInt(document.getElementById("minutes").value);
-
-  taskList.setTimeLimit({ hours, minutes });
+  const setHours = document.getElementById("hours");
+  const setMinutes = document.getElementById("minutes");
+  if (validateInput(setHours) && validateInput(setMinutes)) {
+    const hours = parseInt(setHours.value);
+    const minutes = parseInt(setMinutes.value);
+    const timeLimit = document.getElementById("time-limit");
+    taskList.setTimeLimit(hours, minutes);
+    timeLimit.innerHTML = `Current set limit: ${hours}hrs ${minutes}min`;
+    initList(); // refresh the list
+  }
 }
-
+// Adding / editing a task form handlers
 function handleFocus() {
-  if (error.children.length > 0) {
-    this.classList.remove("input-error");
-    let err;
-    switch (this.id) {
-      case "title":
-        err = "Title";
-        break;
-      case "description":
-        err = "Description";
-        break;
-      case "task-hrs":
-      case "task-mins":
-        minutesInput.classList.remove("input-error");
-        hoursInput.classList.remove("input-error");
-        err = "duration";
-        break;
-      default:
-        break;
-    }
-
-    if (err) { removeError(err); }
+  switch (this.id) {
+    case "title":
+      this.classList.remove("input-error");
+      errors[0].innerHTML = '';
+      break;
+    case "description":
+      this.classList.remove("input-error");
+      errors[1].innerHTML = '';
+      break;
+    case "task-hrs":
+    case "task-mins":
+      hoursInput.classList.remove("input-error");
+      minutesInput.classList.remove("input-error");
+      errors[2].innerHTML = '';
+      break;
+    case "hours":
+    case "minutes":
+      limitHrs.classList.remove("input-error");
+      limitMins.classList.remove("input-error");
+      break;
+    default:
+      break;
   }
 }
 
-let isOpen = false;
-function openTaskDetails(e) {
-  if (e.target.parentElement.className === "task-preview") {
+function handleBlur() {
+  validateInput(this);
+}
+// *** task from handlers ^
+function taskListClickHandler(e) {
+  // Opens task details
+  if (e.target.parentElement.className.includes("task-preview")) {
     const taskDetails = e.target.parentElement.nextElementSibling;
     const dropdown = e.target.parentElement.children[0];
-    if (!isOpen) {
+    if (!taskDetails.className.includes("task-details-active")) {
       dropdown.classList.add("dropdown-active");
       taskDetails.classList.add("task-details-active");
     } else {
       taskDetails.classList.remove("task-details-active");
       dropdown.classList.remove("dropdown-active");
     }
+  } else if (e.target.className.includes("trash")) {
+    const li = e.target.parentElement.parentElement.parentElement;
+    taskList.removeTask(parseInt(li.id));
 
-    isOpen = !isOpen;
+    initList();
   }
 }
 
 /**** End event handlers ****/
 
 /**** Validation and utilities ****/
-function validateTaskForm() {
-  const titleValue = titleInput.value;
-  const descriptionValue = descriptionInput.value;
-  const hoursValue = hoursInput.value;
-  const minutesValue = minutesInput.value;
+function validateNumberType(hrs, mins) {
+  if (
+    (hrs.value.length < 1 || mins.value.length < 1) || // Make sure inputs are not empty
+    (hrs.value < 1 && mins.value < 1) || // Make sure duration is at least 0 hrs 1 min
+    (hrs.value < 0 || mins.value < 0) || // Make sure there are no negative values
+    (mins.value > 59) // Minutes value should be between 0 and 59
+  ) {
+    hrs.classList.add("input-error");
+    mins.classList.add("input-error");
+    return false;
+  }
 
+  return true;
+}
+
+function validateInput(input) {
   let isValid = true;
+  if (input.type === "number" && (input.id === "task-hrs" || input.id === "task-mins")) {
+    // Validate adding / editing task form dration inputs
+    isValid = validateNumberType(hoursInput, minutesInput);
+    if (!isValid) { errors[2].innerHTML = "Invalid duration"; }
+  } else if (input.type === "number" && (input.id === "hours" || input.id === "minutes")) {
+    // Validate limit inputs
+    isValid = validateNumberType(limitHrs, limitMins);
+  } else {
+    // Validate adding / editing task form title / description inputs
+    if (input.value.length < 1) {
+      input.classList.add("input-error");
+      if (input.id === "title") {
+        errors[0].innerHTML = "Title cannot be empty";
+      } else {
+        errors[1].innerHTML = "Description cannot be empty";
+      }
 
-  if (titleValue.length < 1) {
-    titleInput.classList.add("input-error");
-    const p = document.createElement("p");
-    p.innerHTML = "Title cannot be empty.";
-    if (!findError(p.innerHTML)) {
-      error.appendChild(p);
+      isValid = false;
     }
-    isValid = false;
-  }
-  if (descriptionValue.length < 1) {
-    descriptionInput.classList.add("input-error");
-    const p = document.createElement("p");
-    p.innerHTML = "Description cannot be empty.";
-    if (!findError(p.innerHTML)) {
-      error.appendChild(p);
-    }
-    isValid = false;
-  }
-
-  if (hoursValue < 0 || (hoursValue < 1 && minutesValue < 1) || minutesValue > 59 || minutesValue < 0) {
-    hoursInput.classList.add("input-error");
-    minutesInput.classList.add("input-error");
-    const p = document.createElement("p")
-    p.innerHTML = "Invalid duration";
-    if (!findError(p.innerHTML)) {
-      error.appendChild(p);
-    }
-    isValid = false;
   }
 
   return isValid;
 }
 
-// Looks for the error in the error list container and removes the child including "err" which is a substring of the actual error
-function removeError(err) {
-  const childToRemove = findError(err);
-  if (childToRemove) {
-    error.removeChild(childToRemove);
-  }
-}
+function validateTaskForm() {
+  let isValid = true;
+  isValid = validateInput(titleInput);
+  isValid = validateInput(descriptionInput);
+  isValid = validateInput(hoursInput);
+  isValid = validateInput(minutesInput);
 
-function findError(errorText) {
-  return Array.from(error.children).find(child => child.innerHTML.includes(errorText));
+  return isValid;
 }
 
 function toggleClass(element, removeClass, addClass) {
   element.classList.remove(removeClass);
   element.classList.add(addClass);
 }
-/**** End validation and utilitie ****/
+/**** End validation and utilities ****/
 
 /**** Task list ****/
 function initList() {
@@ -295,11 +341,11 @@ function initList() {
     taskList.getTasks().forEach(task => {
       createTask(htmlList, task);
     });
+    totalHours.innerHTML = `${taskList.getTotalHrs().hrs} hrs ${taskList.getTotalHrs().min} min`;
   }
 }
 
 function createTask(list, task) {
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Create elements
   const taskLI = document.createElement("li");
   const taskPreviewContainer = document.createElement("div");
@@ -320,7 +366,14 @@ function createTask(list, task) {
   const dateIcon = document.createElement("span");
   const dateTime = document.createElement("time");
   // Add classes
-  taskPreviewContainer.className = "task-preview";
+  if (
+    (task.getHours() > taskList.getTimeLimit().hrs) ||
+    (task.getHours() === taskList.getTimeLimit().hrs && task.getMinutes() > taskList.getTimeLimit().min)
+  ) {
+    taskPreviewContainer.className = "task-preview warning";
+  } else {
+    taskPreviewContainer.className = "task-preview";
+  }
   dropDownContainer.className = "dropdown";
   dropDownBtn.className = "fas fa-angle-down";
   optionsContainer.className = "options";
@@ -358,6 +411,7 @@ function createTask(list, task) {
   taskDescription.innerHTML = task.getDescription();
   duration.innerHTML += `${task.getHours()}h ${task.getMinutes()}m`;
   dateTime.innerHTML = `${taskDate.day} ${months[taskDate.month]} ${taskDate.year}`;
+  taskLI.setAttribute("id", task.getId());
 
   list.appendChild(taskLI);
 }
