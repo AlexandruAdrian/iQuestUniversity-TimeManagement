@@ -30,15 +30,19 @@ class TaskList {
         task.setDescription(newTask.getDescription());
         task.setHours(newTask.getHours());
         task.setMinutes(newTask.getMinutes());
+        task.setDate(newTask.getDate());
         return;
       }
     })
   }
 
+  resetTotal() {
+    this.#totalHrs.hrs = 0;
+    this.#totalHrs.min = 0;
+  }
   getTask(id) {
     return this.#tasks.find(task => task.getId() === id);
   }
-
   getTasks() { return this.#tasks; }
   getTasksLength() { return this.#tasks.length };
   getTimeLimit() { return this.#timeLimit; }
@@ -57,16 +61,7 @@ class TaskList {
         this.#totalHrs.hrs += 1;
         this.#totalHrs.min %= 60;
       }
-    } else {
-      if (this.#totalHrs.min - minutes < 0) {
-        this.#totalHrs.min = 60 - (minutes - this.#totalHrs.min);
-        this.#totalHrs.hrs -= (hours + 1);
-      } else {
-        this.#totalHrs.hrs -= hours;
-        this.#totalHrs.min -= minutes;
-      }
     }
-
   }
 }
 
@@ -101,10 +96,11 @@ class Task {
   getDate() { return this.#date; }
 
   setId(id) { this.#id = id; }
-  setTitle(title) { this.#title = title };
-  setDescription(description) { this.#description = description };
-  setHours(hours) { this.#hours = hours };
-  setMinutes(minutes) { this.#minutes = minutes };
+  setTitle(title) { this.#title = title; }
+  setDescription(description) { this.#description = description; }
+  setHours(hours) { this.#hours = hours; }
+  setMinutes(minutes) { this.#minutes = minutes; }
+  setDate(date) { this.#date = date; }
 }
 
 const taskList = new TaskList([]);
@@ -128,6 +124,7 @@ const htmlList = document.querySelector(".task-list");
 const totalHours = document.getElementById("total-hours");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let taskCtr = 1;
+let taskToEdit = -1;
 
 (() => {
   initList();
@@ -140,8 +137,7 @@ function initEventHandlers() {
   mobileMenuTrigger.addEventListener("click", openMobileMenu);
   closeMobileMenuBtn.addEventListener("click", closeMobileMenu);
   // Task form modal
-  addTaskBtn.addEventListener("click", openFormModal);
-  closeForm.addEventListener("click", closeFormModal);
+  addTaskBtn.addEventListener("click", handleOpenAddForm);
   // Set time limit
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
@@ -149,7 +145,7 @@ function initEventHandlers() {
   limitMins.addEventListener("blur", handleBlur);
   timeLimitBtn.addEventListener("click", handleTimeLimit);
   // Task list
-  htmlList.addEventListener("click", taskListClickHandler);
+  htmlList.addEventListener("click", handleTaskListClick);
 }
 
 function openMobileMenu() {
@@ -166,7 +162,7 @@ function closeMobileMenu() {
   toggleClass(mobileMenu, "show-mobile-menu", "hide-mobile-menu");
 }
 
-function openFormModal() {
+function initModalEvents() {
   formModal.classList.add("modal-bg-active");
   titleInput.focus();
 
@@ -179,27 +175,35 @@ function openFormModal() {
   descriptionInput.addEventListener("blur", handleBlur);
   hoursInput.addEventListener("blur", handleBlur);
   minutesInput.addEventListener("blur", handleBlur);
-
-  submitBtn.addEventListener("click", handleTaskCreation);
 }
 
-function closeFormModal() {
-  titleInput.classList.remove("input-error");
-  descriptionInput.classList.remove("input-error");
-  hoursInput.classList.remove("input-error");
-  minutesInput.classList.remove("input-error");
+function handleOpenAddForm() {
+  initModalEvents();
+  closeForm.addEventListener("click", handleCloseAddForm);
+  submitBtn.addEventListener("click", handleTaskAdd);
+}
+
+function handleCloseAddForm() {
+  resetForm();
   formModal.classList.remove("modal-bg-active");
-  titleInput.value = '';
-  descriptionInput.value = '';
-  hoursInput.value = '';
-  minutesInput.value = '';
-  errors[0].innerHTML = '';
-  errors[1].innerHTML = '';
-  errors[2].innerHTML = ''
-  submitBtn.removeEventListener('click', handleTaskCreation);
+  closeForm.removeEventListener("click", handleCloseAddForm);
+  submitBtn.removeEventListener('click', handleTaskAdd);
 }
 
-function handleTaskCreation(e) {
+function handleOpenEditForm() {
+  initModalEvents();
+  closeForm.addEventListener("click", handleCloseEditForm);
+  submitBtn.addEventListener("click", handleTaskEdit);
+}
+
+function handleCloseEditForm() {
+  resetForm();
+  formModal.classList.remove("modal-bg-active");
+  closeForm.removeEventListener("click", handleCloseEditForm);
+  submitBtn.removeEventListener("click", handleTaskEdit);
+}
+
+function handleTaskAdd(e) {
   e.preventDefault();
   const titleValue = titleInput.value;
   const descriptionValue = descriptionInput.value;
@@ -209,16 +213,23 @@ function handleTaskCreation(e) {
     // Create a new task
     const task = new Task(taskCtr++, titleValue, descriptionValue, parseInt(hoursValue), parseInt(minutesValue));
     taskList.addTask(task)
-    taskList.setTotalHrs(task.getHours(), task.getMinutes(), true); // True means addtition, else it means subtraction
     // Reset inputs
-    titleInput.value = '';
-    descriptionInput.value = '';
-    hoursInput.value = 0;
-    minutesInput.value = 0;
+    resetForm();
     // Focus back on title and refresh task list
     titleInput.focus();
     initList();
   }
+}
+
+function handleTaskEdit(e) {
+  e.preventDefault();
+  const titleValue = titleInput.value;
+  const descriptionValue = descriptionInput.value;
+  const hoursValue = parseInt(hoursInput.value);
+  const minutesValue = parseInt(minutesInput.value);
+  const newTask = new Task(taskToEdit, titleValue, descriptionValue, hoursValue, minutesValue);
+  taskList.editTask(newTask);
+  initList();
 }
 
 function handleTimeLimit(e) {
@@ -265,7 +276,7 @@ function handleBlur() {
   validateInput(this);
 }
 // *** task from handlers ^
-function taskListClickHandler(e) {
+function handleTaskListClick(e) {
   // Opens task details
   if (e.target.parentElement.className.includes("task-preview")) {
     const taskDetails = e.target.parentElement.nextElementSibling;
@@ -282,8 +293,17 @@ function taskListClickHandler(e) {
     const li = e.target.parentElement.parentElement.parentElement;
     const task = taskList.getTask(parseInt(li.id));
     taskList.removeTask(parseInt(li.id));
-    taskList.setTotalHrs(task.getHours(), task.getMinutes(), false);
     initList();
+  } else if (e.target.className.includes("edit")) {
+    // Edit selected task
+    const li = e.target.parentElement.parentElement.parentElement;
+    taskToEdit = parseInt(li.id);
+    const task = taskList.getTask(taskToEdit);
+    titleInput.value = task.getTitle();
+    descriptionInput.value = task.getDescription();
+    hoursInput.value = task.getHours();
+    minutesInput.value = task.getMinutes();
+    handleOpenEditForm();
   }
 }
 
@@ -341,6 +361,20 @@ function validateTaskForm() {
   return isValid;
 }
 
+function resetForm() {
+  titleInput.classList.remove("input-error");
+  descriptionInput.classList.remove("input-error");
+  hoursInput.classList.remove("input-error");
+  minutesInput.classList.remove("input-error");
+  titleInput.value = '';
+  descriptionInput.value = '';
+  hoursInput.value = '';
+  minutesInput.value = '';
+  errors[0].innerHTML = '';
+  errors[1].innerHTML = '';
+  errors[2].innerHTML = ''
+}
+
 function toggleClass(element, removeClass, addClass) {
   element.classList.remove(removeClass);
   element.classList.add(addClass);
@@ -349,6 +383,7 @@ function toggleClass(element, removeClass, addClass) {
 
 /**** Task list ****/
 function initList() {
+  taskList.resetTotal();
   htmlList.innerHTML = '';
   if (taskList.getTasksLength() < 1) {
     const li = document.createElement("li");
@@ -357,9 +392,11 @@ function initList() {
     htmlList.appendChild(li);
   } else {
     taskList.getTasks().forEach(task => {
+      taskList.setTotalHrs(task.getHours(), task.getMinutes(), true);
       createTask(htmlList, task);
     });
   }
+
   totalHours.innerHTML = `${taskList.getTotalHrs().hrs} hrs ${taskList.getTotalHrs().min} min`;
 }
 
@@ -384,6 +421,7 @@ function createTask(list, task) {
   const dateIcon = document.createElement("span");
   const dateTime = document.createElement("time");
   // Add classes
+  // Check if task duration exceeds time limit
   if (
     (task.getHours() > taskList.getTimeLimit().hrs) ||
     (task.getHours() === taskList.getTimeLimit().hrs && task.getMinutes() > taskList.getTimeLimit().min)
@@ -392,6 +430,7 @@ function createTask(list, task) {
   } else {
     taskPreviewContainer.className = "task-preview";
   }
+
   dropDownContainer.className = "dropdown";
   dropDownBtn.className = "fas fa-angle-down";
   optionsContainer.className = "options";
