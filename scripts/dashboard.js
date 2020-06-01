@@ -16,7 +16,7 @@ class TaskList {
   }
 
   addTask(task) {
-    this.#tasks = [...this.#tasks, task];
+    this.#tasks = [task, ...this.#tasks];
   }
 
   removeTask(taskId) {
@@ -169,7 +169,6 @@ function closeMobileMenu() {
 
 function initModalEvents() {
   formModal.classList.add("modal-bg-active");
-  titleInput.focus();
 
   titleInput.addEventListener("focus", handleFocus);
   descriptionInput.addEventListener("focus", handleFocus);
@@ -220,8 +219,7 @@ function handleTaskAdd(e) {
     taskList.addTask(task)
     // Reset inputs
     resetForm();
-    // Focus back on title and refresh task list
-    titleInput.focus();
+    // Refresh task list
     initList();
   }
 }
@@ -245,18 +243,18 @@ function handleSetBtn(e) {
     const hours = parseInt(setHours.value);
     const minutes = parseInt(setMinutes.value);
     taskList.setTimeLimit(hours, minutes);
-    timeLimit.innerHTML = `Current set limit: ${hours} hrs ${minutes} min`;
-    toggleClass(setLimitContainer, "time-limit-active", "set-inactive")
-    toggleClass(unsetLimitContainer, "unset-inactive", "time-limit-active");
+    timeLimit.innerHTML = `${hours} hrs ${minutes} min`;
+    toggleClass(setLimitContainer, "set-active", "set-inactive")
+    toggleClass(unsetLimitContainer, "unset-inactive", "unset-active");
     initList(); // refresh the list
   }
 }
 
 function handleUnsetBtn() {
   taskList.setTimeLimit(999999, 0);
-  toggleClass(unsetLimitContainer, "time-limit-active", "unset-inactive");
-  toggleClass(setLimitContainer, "set-inactive", "time-limit-active")
-  timeLimit.innerHTML = `Current set limit: none`;
+  toggleClass(unsetLimitContainer, "unset-active", "unset-inactive");
+  toggleClass(setLimitContainer, "set-inactive", "set-active")
+  timeLimit.innerHTML = `none`;
   initList(); // refresh the list
 }
 // Adding / editing a task form handlers

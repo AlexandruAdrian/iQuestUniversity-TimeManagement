@@ -1,8 +1,8 @@
 :root {
   --primary-color: rgb(2, 90, 162);
   --secondary-color: rgb(230, 80, 92);
-  --primary-hover-bg: rgba(2, 90, 162, .85);
-  --secondary-hover-bg: rgba(230, 80, 92, .85);
+  --primary-hover-bg: rgba(2, 90, 162, .9);
+  --secondary-hover-bg: rgba(230, 80, 92, .9);
   --main-border-radius: 5px;
   --font: 'Montserrat', sans-serif;
 }
@@ -54,6 +54,10 @@ body {
   border: none;
   transition: background-color .5s;
   cursor: pointer;
+}
+
+.btn:active {
+  box-shadow: inset 0px 0px 6px 0px rgba(0,0,0,0.75);
 }
 
 .main-footer {

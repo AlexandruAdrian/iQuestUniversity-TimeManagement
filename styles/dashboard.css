@@ -153,6 +153,7 @@ main .container header h1 {
   margin-left: 10px;
   font-size: 18px;
   color: var(--primary-color);
+  letter-spacing: .5px;
 }
 
 main .container header h1 span {
@@ -161,8 +162,8 @@ main .container header h1 span {
 
 /* Task list  styles */
 main .container > div {
-  position: relative;
   width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -177,19 +178,29 @@ main .container > div {
 
 .set {
   position: absolute;
+  left: 0;
   display: flex;
-  height: 40px;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
   transition: top .5s ease;
+}
+
+.set button {
+  color: var(--primary-color);
+}
+
+.set button:hover {
+  background-color: rgba(255, 255, 255, .95);
 }
 
 .set-inactive {
   top: -40px;
 }
 
-.time-limit-active {
+.set-active {
   top: 0px;
 }
 
@@ -197,14 +208,33 @@ main .container > div {
   top: 40px;
 }
 
+.unset-active {
+  top: 0px;
+}
+
 .unset {
-  position: absolute;
   display: flex;
+  position: absolute;
+  left: 0;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
-  height: 40px;
+  width: 100%;
+  padding: 0 10px;
+  height: 100%;
   transition: top .5s ease;
+}
+
+.unset > p > span {
+  font-weight: bold;
+}
+
+.unset > button {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+.unset > button:hover {
+  background-color: var(--secondary-hover-bg);
 }
 
 main .container .set input {
@@ -218,13 +248,15 @@ main .container .set input {
 main .container div button {
   width: 50px;
   height: 25px;
-  color: var(--primary-color);
-  background-color: #fff;
   border: none;
   border-radius: var(--main-border-radius);
   font-weight: bold;
   cursor: pointer;
   transition: all .3s ease;
+}
+
+main .container div button:active {
+  box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,0.75);
 }
 
 .no-tasks {
@@ -383,12 +415,13 @@ main .container footer span {
 /* End of task list styles */
 
 .warning {
-  background-color: var(--highlight);
+  background-color: var(--secondary-color);
+  border: .5px solid #fff;
   color: #fff;
 }
 
 .warning .options {
-  background: linear-gradient(to right, var(--highlight), #FDE1E2);
+  background: linear-gradient(to right, var(--secondary-color), #FDE1E2);
 }
 
 /* Highlight the title and the duration aswell */

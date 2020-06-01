@@ -51,15 +51,17 @@
       </header>
 
       <div>
-        <p>Time limit</p>
-        <form>
+        <form class="set set-active">
           <label for="hours">Hours</label>
           <input type="number" id="hours" name="hours" placeholder="0" min="0" />
           <label for="minutes">Minutes</label>
           <input type="number" id="minutes" name="minutes" placeholder="0" min="0" max="60" />
           <button id="set-time-limit">Set</button>
         </form>
-        <p id="time-limit">Current set limit: 0 hrs 0 min</p>
+        <div class="unset unset-inactive">
+          <p>Current set limit: <span id="time-limit">none</span></p>
+          <button id="unset-time-limit">Unset</button>
+        </div>
       </div>
 
       <ul class="task-list">
