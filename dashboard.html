@@ -17,7 +17,7 @@
 
 <body>
   <header class="dashboard-header">
-    <div class="mobile-menu-trigger">
+    <div class="menu-trigger">
       <span class="fas fa-bars"></span>
     </div>
 
@@ -29,8 +29,8 @@
     </div>
   </header>
 
-  <nav class="mobile-menu hide-mobile-menu">
-    <div class="close-mobile-menu">
+  <nav class="menu hide-menu">
+    <div class="close-menu">
       <span class="fas fa-times fa-lg"></span>
     </div>
 
@@ -52,10 +52,14 @@
 
       <div>
         <form class="set set-active">
-          <label for="hours">Hours</label>
-          <input type="number" id="hours" name="hours" placeholder="0" min="0" />
-          <label for="minutes">Minutes</label>
-          <input type="number" id="minutes" name="minutes" placeholder="0" min="0" max="60" />
+          <div class="set-input-wrapper">
+            <label for="hours">Hours</label>
+            <input type="number" id="hours" name="hours" placeholder="0" min="0" />
+          </div>
+          <div class="set-input-wrapper">
+            <label for="minutes">Minutes</label>
+            <input type="number" id="minutes" name="minutes" placeholder="0" min="0" max="60" />
+          </div>
           <button id="set-time-limit">Set</button>
         </form>
         <div class="unset unset-inactive">
@@ -69,11 +73,12 @@
 
       <footer>
         <p>Total working hours: <span id="total-hours">0 hrs 0 min</span></p>
+        <button id="dekstop-add-task-btn">Add task</button>
       </footer>
     </section>
   </main>
 
-  <button class="add-task-btn">+</button>
+  <button class="mobile-add-task-btn">+</button>
 
   <div class="modal-bg">
     <div class="task-form-container">

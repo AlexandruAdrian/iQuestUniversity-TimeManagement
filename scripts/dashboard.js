@@ -104,11 +104,12 @@ class Task {
 }
 
 const taskList = new TaskList([]);
-const mobileMenuTrigger = document.querySelector(".mobile-menu-trigger");
-const mobileMenu = document.querySelector(".mobile-menu");
+const mobileMenuTrigger = document.querySelector(".menu-trigger");
+const mobileMenu = document.querySelector(".menu");
 const logOutBtn = mobileMenu.lastElementChild;
-const closeMobileMenuBtn = document.querySelector(".close-mobile-menu");
-const addTaskBtn = document.querySelector(".add-task-btn");
+const closeMobileMenuBtn = document.querySelector(".close-menu");
+const addTaskBtn = document.querySelector(".mobile-add-task-btn");
+const desktopAddTaskBtn = document.getElementById("dekstop-add-task-btn")
 const closeForm = document.querySelector(".close-task-form");
 const limitHrs = document.getElementById("hours");
 const limitMins = document.getElementById("minutes");
@@ -127,8 +128,8 @@ const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
 const totalHours = document.getElementById("total-hours");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-let taskCtr = 1;
-let taskToEdit = -1;
+let taskCtr = 1; // Generate ID for each task
+let taskToEdit = -1; // Holds ID for the edit 
 
 (() => {
   initList();
@@ -142,6 +143,7 @@ function initEventHandlers() {
   closeMobileMenuBtn.addEventListener("click", closeMobileMenu);
   // Task form modal
   addTaskBtn.addEventListener("click", handleOpenAddForm);
+  desktopAddTaskBtn.addEventListener("click", handleOpenAddForm);
   // Set time limit
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
@@ -154,7 +156,7 @@ function initEventHandlers() {
 }
 
 function openMobileMenu() {
-  toggleClass(mobileMenu, "hide-mobile-menu", "show-mobile-menu");
+  toggleClass(mobileMenu, "hide-menu", "show-menu");
   logOutBtn.addEventListener("click", handleLogOut);
 }
 
@@ -164,7 +166,7 @@ function handleLogOut() {
 }
 
 function closeMobileMenu() {
-  toggleClass(mobileMenu, "show-mobile-menu", "hide-mobile-menu");
+  toggleClass(mobileMenu, "show-menu", "hide-menu");
 }
 
 function initModalEvents() {
@@ -287,7 +289,7 @@ function handleFocus() {
 function handleBlur() {
   validateInput(this);
 }
-// *** task from handlers ^
+
 function handleTaskListClick(e) {
   // Opens task details
   if (e.target.parentElement.className.includes("task-preview")) {
@@ -303,7 +305,6 @@ function handleTaskListClick(e) {
   } else if (e.target.className.includes("trash")) {
     // Deletes selected task
     const li = e.target.parentElement.parentElement.parentElement;
-    const task = taskList.getTask(parseInt(li.id));
     taskList.removeTask(parseInt(li.id));
     initList();
   } else if (e.target.className.includes("edit")) {
@@ -424,7 +425,7 @@ function createTask(list, task) {
   const deleteOption = document.createElement("span");
   const taskDetails = document.createElement("div");
   const taskTitle = document.createElement("p");
-  const taskDescription = document.createElement("div");
+  const taskDescription = document.createElement("pre");
   const taskTimes = document.createElement("div");
   const strongTitle = document.createElement("strong");
   const duration = document.createElement("p");
