@@ -153,6 +153,7 @@ function initEventHandlers() {
   unsetLimitBtn.addEventListener("click", handleUnsetBtn);
   // Task list
   htmlList.addEventListener("click", handleTaskListClick);
+  initModalEvents();
 }
 
 function openMobileMenu() {
@@ -170,7 +171,7 @@ function closeMobileMenu() {
 }
 
 function initModalEvents() {
-  formModal.classList.add("modal-bg-active");
+
 
   titleInput.addEventListener("focus", handleFocus);
   descriptionInput.addEventListener("focus", handleFocus);
@@ -184,7 +185,7 @@ function initModalEvents() {
 }
 
 function handleOpenAddForm() {
-  initModalEvents();
+  formModal.classList.add("modal-bg-active");
   closeForm.addEventListener("click", handleCloseAddForm);
   submitBtn.addEventListener("click", handleTaskAdd);
 }
@@ -197,7 +198,7 @@ function handleCloseAddForm() {
 }
 
 function handleOpenEditForm() {
-  initModalEvents();
+  formModal.classList.add("modal-bg-active");
   closeForm.addEventListener("click", handleCloseEditForm);
   submitBtn.addEventListener("click", handleTaskEdit);
 }

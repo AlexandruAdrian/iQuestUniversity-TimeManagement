@@ -607,6 +607,10 @@ input, textarea {
     width: 550px;
   }
 
+  .task-list {
+    border: 1px solid var(--primary-color);
+  }
+
   main .container > div {
     border-top-left-radius: var(--main-border-radius);
     border-top-right-radius: var(--main-border-radius);
@@ -671,6 +675,19 @@ input, textarea {
 
   .unset-inactive {
     top: 50px;
+  }
+
+  .task-preview {
+    height: 50px;
+  }
+
+  .task-preview > p {
+    width: calc(100% - 130px);
+    line-height: 50px;
+  }
+
+  .options {
+    width: 100px;
   }
   
   main .container footer {
