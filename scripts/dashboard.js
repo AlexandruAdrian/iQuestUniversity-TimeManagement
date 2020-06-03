@@ -1,7 +1,7 @@
 class TaskList {
   #tasks;
   #timeLimit;
-  #totalHrs
+  #totalHrs;
 
   constructor(tasks = []) {
     this.#tasks = [...tasks];
@@ -53,14 +53,12 @@ class TaskList {
     this.#timeLimit.min = minutes;
   }
 
-  setTotalHrs(hours, minutes, add) {
-    if (add) {
-      this.#totalHrs.hrs += hours;
-      this.#totalHrs.min += minutes;
-      if (this.#totalHrs.min > 59) {
-        this.#totalHrs.hrs += 1;
-        this.#totalHrs.min %= 60;
-      }
+  setTotalHrs(hours, minutes) {
+    this.#totalHrs.hrs += hours;
+    this.#totalHrs.min += minutes;
+    if (this.#totalHrs.min > 59) {
+      this.#totalHrs.hrs += 1;
+      this.#totalHrs.min %= 60;
     }
   }
 }
@@ -406,7 +404,7 @@ function initList() {
     htmlList.appendChild(li);
   } else {
     taskList.getTasks().forEach(task => {
-      taskList.setTotalHrs(task.getHours(), task.getMinutes(), true);
+      taskList.setTotalHrs(task.getHours(), task.getMinutes());
       createTask(htmlList, task);
     });
   }
