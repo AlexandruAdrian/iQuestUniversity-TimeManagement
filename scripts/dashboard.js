@@ -102,10 +102,10 @@ class Task {
 }
 
 const taskList = new TaskList([]);
-const mobileMenuTrigger = document.querySelector(".menu-trigger");
-const mobileMenu = document.querySelector(".menu");
-const logOutBtn = mobileMenu.lastElementChild;
-const closeMobileMenuBtn = document.querySelector(".close-menu");
+const menuTrigger = document.querySelector(".menu-trigger");
+const menu = document.querySelector(".menu");
+const logOutBtn = menu.lastElementChild;
+const closeMenuBtn = document.querySelector(".close-menu");
 const addTaskBtn = document.querySelector(".mobile-add-task-btn");
 const desktopAddTaskBtn = document.getElementById("dekstop-add-task-btn")
 const closeForm = document.querySelector(".close-task-form");
@@ -136,26 +136,29 @@ let taskToEdit = -1; // Holds ID for the edit
 
 /**** Event handlers ****/
 function initEventHandlers() {
-  // Mobile menu
-  mobileMenuTrigger.addEventListener("click", openMobileMenu);
-  closeMobileMenuBtn.addEventListener("click", closeMobileMenu);
-  // Task form modal
-  addTaskBtn.addEventListener("click", handleOpenAddForm);
-  desktopAddTaskBtn.addEventListener("click", handleOpenAddForm);
-  // Set time limit
+  initMenuHandlers();
+  initTimeLimitHandlers();
+  // Task list
+  htmlList.addEventListener("click", handleTaskListClick);
+  initModalHandlers();
+}
+
+function initTimeLimitHandlers() {
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
   limitHrs.addEventListener("blur", handleBlur);
   limitMins.addEventListener("blur", handleBlur);
   setLimitBtn.addEventListener("click", handleSetBtn);
   unsetLimitBtn.addEventListener("click", handleUnsetBtn);
-  // Task list
-  htmlList.addEventListener("click", handleTaskListClick);
-  initModalEvents();
 }
 
-function openMobileMenu() {
-  toggleClass(mobileMenu, "hide-menu", "show-menu");
+function initMenuHandlers() {
+  menuTrigger.addEventListener("click", openMenu);
+  closeMenuBtn.addEventListener("click", closeMenu);
+}
+
+function openMenu() {
+  toggleClass(menu, "hide-menu", "show-menu");
   logOutBtn.addEventListener("click", handleLogOut);
 }
 
@@ -164,12 +167,13 @@ function handleLogOut() {
   window.location.href = "./login.html";
 }
 
-function closeMobileMenu() {
-  toggleClass(mobileMenu, "show-menu", "hide-menu");
+function closeMenu() {
+  toggleClass(menu, "show-menu", "hide-menu");
 }
 
-function initModalEvents() {
-
+function initModalHandlers() {
+  addTaskBtn.addEventListener("click", handleOpenAddForm);
+  desktopAddTaskBtn.addEventListener("click", handleOpenAddForm);
 
   titleInput.addEventListener("focus", handleFocus);
   descriptionInput.addEventListener("focus", handleFocus);
@@ -182,10 +186,21 @@ function initModalEvents() {
   minutesInput.addEventListener("blur", handleBlur);
 }
 
+/**
+ * App uses the same form for adding or editing a task with the difference that
+ * if the form is opened for adding a new task, then the submit button will have 
+ * a handler just for that, same goes for edit. 
+ * */
 function handleOpenAddForm() {
   formModal.classList.add("modal-bg-active");
   closeForm.addEventListener("click", handleCloseAddForm);
   submitBtn.addEventListener("click", handleTaskAdd);
+}
+
+function handleOpenEditForm() {
+  formModal.classList.add("modal-bg-active");
+  closeForm.addEventListener("click", handleCloseEditForm);
+  submitBtn.addEventListener("click", handleTaskEdit);
 }
 
 function handleCloseAddForm() {
@@ -193,12 +208,6 @@ function handleCloseAddForm() {
   formModal.classList.remove("modal-bg-active");
   closeForm.removeEventListener("click", handleCloseAddForm);
   submitBtn.removeEventListener('click', handleTaskAdd);
-}
-
-function handleOpenEditForm() {
-  formModal.classList.add("modal-bg-active");
-  closeForm.addEventListener("click", handleCloseEditForm);
-  submitBtn.addEventListener("click", handleTaskEdit);
 }
 
 function handleCloseEditForm() {
@@ -432,7 +441,6 @@ function createTask(list, task) {
   const date = document.createElement("p");
   const dateIcon = document.createElement("span");
   const dateTime = document.createElement("time");
-  // Add classes
   // Check if task duration exceeds time limit
   if (
     (task.getHours() > taskList.getTimeLimit().hrs) ||
@@ -443,6 +451,7 @@ function createTask(list, task) {
     taskPreviewContainer.className = "task-preview";
   }
 
+  // Add classes
   dropDownContainer.className = "dropdown";
   dropDownBtn.className = "fas fa-angle-down";
   optionsContainer.className = "options";
