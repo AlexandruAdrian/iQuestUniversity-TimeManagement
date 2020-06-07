@@ -385,12 +385,16 @@ main .container div button:active {
 .task-title {
   text-align: center;
   margin-top: 5px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .task-description {
   margin-top: 15px;
   text-align: justify;
   text-justify: inter-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .task-details > div {
@@ -642,14 +646,15 @@ input, textarea {
   }
 
   main .container .set input {
-    width: 45px;
-    padding: 8px 4px;
+    width: 100px;
+    padding: 6px 4px;
     height: auto;
   }
   
   main .container div button {
     height: auto;
-    padding: 8px 0px;
+    width: 80px;
+    padding: 6px 0px;
   }
 
   .task-form-container {

@@ -146,8 +146,12 @@ function initEventHandlers() {
 function initTimeLimitHandlers() {
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
+  limitHrs.addEventListener("input", handleNumberInputLength);
+  limitMins.addEventListener("input", handleNumberInputLength);
   limitHrs.addEventListener("blur", handleBlur);
   limitMins.addEventListener("blur", handleBlur);
+  limitHrs.addEventListener("keydown", handleKeydown);
+  limitMins.addEventListener("keydown", handleKeydown);
   setLimitBtn.addEventListener("click", handleSetBtn);
   unsetLimitBtn.addEventListener("click", handleUnsetBtn);
 }
@@ -155,11 +159,11 @@ function initTimeLimitHandlers() {
 function initMenuHandlers() {
   menuTrigger.addEventListener("click", openMenu);
   closeMenuBtn.addEventListener("click", closeMenu);
+  logOutBtn.addEventListener("click", handleLogOut);
 }
 
 function openMenu() {
   toggleClass(menu, "hide-menu", "show-menu");
-  logOutBtn.addEventListener("click", handleLogOut);
 }
 
 function handleLogOut() {
@@ -184,6 +188,11 @@ function initModalHandlers() {
   descriptionInput.addEventListener("blur", handleBlur);
   hoursInput.addEventListener("blur", handleBlur);
   minutesInput.addEventListener("blur", handleBlur);
+
+  hoursInput.addEventListener("input", handleNumberInputLength);
+  minutesInput.addEventListener("input", handleNumberInputLength);
+  hoursInput.addEventListener("keydown", handleKeydown);
+  minutesInput.addEventListener("keydown", handleKeydown);
 }
 
 /**
@@ -193,12 +202,14 @@ function initModalHandlers() {
  * */
 function handleOpenAddForm() {
   formModal.classList.add("modal-bg-active");
+  titleInput.focus();
   closeForm.addEventListener("click", handleCloseAddForm);
   submitBtn.addEventListener("click", handleTaskAdd);
 }
 
 function handleOpenEditForm() {
   formModal.classList.add("modal-bg-active");
+  titleInput.focus();
   closeForm.addEventListener("click", handleCloseEditForm);
   submitBtn.addEventListener("click", handleTaskEdit);
 }
@@ -243,6 +254,7 @@ function handleTaskEdit(e) {
   const newTask = new Task(taskToEdit, titleValue, descriptionValue, hoursValue, minutesValue);
   taskList.editTask(newTask);
   initList();
+  formModal.classList.remove("modal-bg-active");
 }
 
 function handleSetBtn(e) {
@@ -331,6 +343,7 @@ function handleTaskListClick(e) {
 /**** End event handlers ****/
 
 /**** Validation and utilities ****/
+// Fires on submit
 function validateNumberType(hrs, mins) {
   if (
     (hrs.value.length < 1 || mins.value.length < 1) || // Make sure inputs are not empty
@@ -344,6 +357,20 @@ function validateNumberType(hrs, mins) {
   }
 
   return true;
+}
+// Fires on 'oninput' event
+function handleNumberInputLength(e) {
+  if (this.value.length > 2) {
+    this.value = this.value.slice(0, 2);
+  }
+}
+// Makes sure the user cannot enter 'e', 'E', '-', '+' or '.' in the number type inputs
+function handleKeydown(e) {
+  const invalidChars = ['e', '-', '+', 'E', '.'];
+
+  if (invalidChars.includes(e.key)) {
+    e.preventDefault();
+  }
 }
 
 function validateInput(input) {

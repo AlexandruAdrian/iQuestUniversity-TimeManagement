@@ -54,11 +54,11 @@
         <form class="set set-active">
           <div class="set-input-wrapper">
             <label for="hours">Hours</label>
-            <input type="number" id="hours" name="hours" placeholder="0" min="0" />
+            <input type="number" id="hours" name="hours" placeholder="0" min="0" max="99" />
           </div>
           <div class="set-input-wrapper">
             <label for="minutes">Minutes</label>
-            <input type="number" id="minutes" name="minutes" placeholder="0" min="0" max="60" />
+            <input type="number" id="minutes" name="minutes" placeholder="0" min="0" max="59" />
           </div>
           <button id="set-time-limit">Set</button>
         </form>
@@ -85,13 +85,14 @@
       <form class="task-form" autocomplete="off">
         <div class="task-input-wrapper">
           <label for="title">Title</label>
-          <input type="text" id="title" class="task-form-input" name="title" placeholder="Lorem ipsum" />
+          <input type="text" id="title" class="task-form-input" name="title" placeholder="Lorem ipsum"
+            maxlength="100" />
           <p class="error"></p>
         </div>
         <div class="task-input-wrapper">
           <label for="description">Description</label>
-          <textarea id="description" class="task-form-input" name="description"
-            placeholder="Lorem ipsum dolor amet.."></textarea>
+          <textarea id="description" class="task-form-input" name="description" placeholder="Lorem ipsum dolor amet.."
+            maxlength="800"></textarea>
           <p class="error"></p>
         </div>
         <p>Duration</p>
