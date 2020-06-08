@@ -116,7 +116,7 @@ const unsetLimitContainer = document.querySelector(".unset");
 const setLimitBtn = document.getElementById("set-time-limit");
 const unsetLimitBtn = document.getElementById("unset-time-limit");
 const timeLimit = document.getElementById("time-limit");
-const formModal = document.querySelector(".modal-bg");
+const formModal = document.getElementById("form-modal");
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const hoursInput = document.getElementById("task-hrs");
@@ -125,33 +125,39 @@ const submitBtn = document.querySelector(".task-form").lastElementChild;
 const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
 const totalHours = document.getElementById("total-hours");
+const deletePopup = document.getElementById("delete-pop-up");
+const popUpTitle = document.getElementById("pop-up-title");
+const popupDeleteBtn = document.getElementById("delete");
+const popupCancelBtn = document.getElementById("cancel");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let taskCtr = 1; // Generate ID for each task
 let taskToEdit = -1; // Holds ID for the edit 
+let taskToRemove = -1; // Holds ID for removal
 
 (() => {
   initList();
   initEventHandlers();
 })();
 
-/**** Event handlers ****/
 function initEventHandlers() {
   initMenuHandlers();
   initTimeLimitHandlers();
   // Task list
-  htmlList.addEventListener("click", handleTaskListClick);
+  htmlList.addEventListener("click", handleTaskList);
   initModalHandlers();
+  initPopUpHandlers();
 }
 
 function initTimeLimitHandlers() {
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
+
   limitHrs.addEventListener("input", handleNumberInputLength);
   limitMins.addEventListener("input", handleNumberInputLength);
-  limitHrs.addEventListener("blur", handleBlur);
-  limitMins.addEventListener("blur", handleBlur);
+
   limitHrs.addEventListener("keydown", handleKeydown);
   limitMins.addEventListener("keydown", handleKeydown);
+
   setLimitBtn.addEventListener("click", handleSetBtn);
   unsetLimitBtn.addEventListener("click", handleUnsetBtn);
 }
@@ -160,6 +166,26 @@ function initMenuHandlers() {
   menuTrigger.addEventListener("click", openMenu);
   closeMenuBtn.addEventListener("click", closeMenu);
   logOutBtn.addEventListener("click", handleLogOut);
+}
+
+function initModalHandlers() {
+  addTaskBtn.addEventListener("click", handleOpenAddForm);
+  desktopAddTaskBtn.addEventListener("click", handleOpenAddForm);
+
+  titleInput.addEventListener("focus", handleFocus);
+  descriptionInput.addEventListener("focus", handleFocus);
+  hoursInput.addEventListener("focus", handleFocus);
+  minutesInput.addEventListener("focus", handleFocus);
+
+  hoursInput.addEventListener("input", handleNumberInputLength);
+  minutesInput.addEventListener("input", handleNumberInputLength);
+  hoursInput.addEventListener("keydown", handleKeydown);
+  minutesInput.addEventListener("keydown", handleKeydown);
+}
+
+function initPopUpHandlers() {
+  popupDeleteBtn.addEventListener("click", handleTaskDelete);
+  popupCancelBtn.addEventListener("click", handleCancel);
 }
 
 function openMenu() {
@@ -173,26 +199,6 @@ function handleLogOut() {
 
 function closeMenu() {
   toggleClass(menu, "show-menu", "hide-menu");
-}
-
-function initModalHandlers() {
-  addTaskBtn.addEventListener("click", handleOpenAddForm);
-  desktopAddTaskBtn.addEventListener("click", handleOpenAddForm);
-
-  titleInput.addEventListener("focus", handleFocus);
-  descriptionInput.addEventListener("focus", handleFocus);
-  hoursInput.addEventListener("focus", handleFocus);
-  minutesInput.addEventListener("focus", handleFocus);
-
-  titleInput.addEventListener("blur", handleBlur);
-  descriptionInput.addEventListener("blur", handleBlur);
-  hoursInput.addEventListener("blur", handleBlur);
-  minutesInput.addEventListener("blur", handleBlur);
-
-  hoursInput.addEventListener("input", handleNumberInputLength);
-  minutesInput.addEventListener("input", handleNumberInputLength);
-  hoursInput.addEventListener("keydown", handleKeydown);
-  minutesInput.addEventListener("keydown", handleKeydown);
 }
 
 /**
@@ -218,7 +224,7 @@ function handleCloseAddForm() {
   resetForm();
   formModal.classList.remove("modal-bg-active");
   closeForm.removeEventListener("click", handleCloseAddForm);
-  submitBtn.removeEventListener('click', handleTaskAdd);
+  submitBtn.removeEventListener("click", handleTaskAdd);
 }
 
 function handleCloseEditForm() {
@@ -232,12 +238,13 @@ function handleTaskAdd(e) {
   e.preventDefault();
   const titleValue = titleInput.value;
   const descriptionValue = descriptionInput.value;
-  const hoursValue = hoursInput.value;
-  const minutesValue = minutesInput.value;
+  const hoursValue = parseInt(hoursInput.value);
+  const minutesValue = parseInt(minutesInput.value);
   if (validateTaskForm()) {
     // Create a new task
-    const task = new Task(taskCtr++, titleValue, descriptionValue, parseInt(hoursValue), parseInt(minutesValue));
+    const task = new Task(taskCtr++, titleValue.trim(), descriptionValue.trim(), hoursValue, minutesValue);
     taskList.addTask(task)
+    titleInput.focus();
     // Reset inputs
     resetForm();
     // Refresh task list
@@ -251,10 +258,25 @@ function handleTaskEdit(e) {
   const descriptionValue = descriptionInput.value;
   const hoursValue = parseInt(hoursInput.value);
   const minutesValue = parseInt(minutesInput.value);
-  const newTask = new Task(taskToEdit, titleValue, descriptionValue, hoursValue, minutesValue);
-  taskList.editTask(newTask);
+  if (validateTaskForm()) {
+    const newTask = new Task(taskToEdit, titleValue.trim(), descriptionValue.trim(), hoursValue, minutesValue);
+    taskList.editTask(newTask);
+    // Remove listeners and reset form
+    handleCloseEditForm();
+    initList();
+  }
+}
+
+function handleTaskDelete() {
+  taskList.removeTask(taskToRemove);
+  popUpTitle.innerHTML = '';
   initList();
-  formModal.classList.remove("modal-bg-active");
+  deletePopup.classList.remove("modal-bg-active");
+}
+
+function handleCancel() {
+  popUpTitle.innerHTML = '';
+  deletePopup.classList.remove("modal-bg-active");
 }
 
 function handleSetBtn(e) {
@@ -306,11 +328,7 @@ function handleFocus() {
   }
 }
 
-function handleBlur() {
-  validateInput(this);
-}
-
-function handleTaskListClick(e) {
+function handleTaskList(e) {
   // Opens task details
   if (e.target.parentElement.className.includes("task-preview")) {
     const taskDetails = e.target.parentElement.nextElementSibling;
@@ -324,9 +342,12 @@ function handleTaskListClick(e) {
     }
   } else if (e.target.className.includes("trash")) {
     // Deletes selected task
+    deletePopup.classList.add("modal-bg-active");
     const li = e.target.parentElement.parentElement.parentElement;
-    taskList.removeTask(parseInt(li.id));
-    initList();
+    const task = taskList.getTask(parseInt(li.id));
+    popUpTitle.innerHTML = task.getTitle();
+    taskToRemove = task.getId();
+
   } else if (e.target.className.includes("edit")) {
     // Edit selected task
     const li = e.target.parentElement.parentElement.parentElement;
@@ -339,8 +360,6 @@ function handleTaskListClick(e) {
     handleOpenEditForm();
   }
 }
-
-/**** End event handlers ****/
 
 /**** Validation and utilities ****/
 // Fires on submit
@@ -384,7 +403,7 @@ function validateInput(input) {
     isValid = validateNumberType(limitHrs, limitMins);
   } else {
     // Validate adding / editing task form title / description inputs
-    if (input.value.length < 1) {
+    if (input.value.trim().length < 1) {
       input.classList.add("input-error");
       if (input.id === "title") {
         errors[0].innerHTML = "Title cannot be empty";
@@ -400,13 +419,7 @@ function validateInput(input) {
 }
 
 function validateTaskForm() {
-  let isValid = true;
-  isValid = validateInput(titleInput);
-  isValid = validateInput(descriptionInput);
-  isValid = validateInput(hoursInput);
-  isValid = validateInput(minutesInput);
-
-  return isValid;
+  return validateInput(titleInput) && validateInput(descriptionInput) && validateInput(hoursInput) && validateInput(minutesInput);
 }
 
 function resetForm() {

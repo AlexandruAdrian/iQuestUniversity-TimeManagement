@@ -107,8 +107,10 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-bottom: 20px;
+  min-height: 100%;
   margin-top: 70px;
+  margin-bottom: 20px;
+  flex: 1;
 }
 
 main .btn {
@@ -129,7 +131,7 @@ main .btn:hover {
 main .container {
   border-radius: var(--main-border-radius);
   padding: 0;
-  height: 100%;
+  flex: 1;
 }
 
 main .container header {
@@ -160,7 +162,7 @@ main .container header h1 span {
   color: var(--secondary-color)
 }
 
-/* Task list  styles */
+/* Task list styles */
 main .container > div {
   width: 100%;
   position: relative;
@@ -169,7 +171,7 @@ main .container > div {
   justify-content: space-between;
   align-items: center;
   background-color: var(--primary-color);
-  height: 40px;
+  height: 50px;
   overflow: hidden;
   color: #fff;
   border: 1px solid var(--primary-color);
@@ -178,9 +180,13 @@ main .container > div {
 
 .set-input-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 105px;
+}
+
+.set-input-wrapper input {
+  margin-left: 5px;
 }
 
 .set {
@@ -252,7 +258,7 @@ main .container .set input {
   padding: 1px 2px;
 }
 
-main .container div button {
+main .container > div button {
   width: 50px;
   height: 25px;
   border: none;
@@ -262,7 +268,7 @@ main .container div button {
   transition: all .3s ease;
 }
 
-main .container div button:active {
+main .container > div button:active {
   box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,0.75);
 }
 
@@ -274,10 +280,9 @@ main .container div button:active {
 
 .task-list {
   width: 100%;
-  min-height: 250px;
-  height: auto;
-  border: none;
+  height: 100%;
   background-color: #fff;
+  flex: 1;
 }
 
 .task-list li {
@@ -414,7 +419,6 @@ main .container div button:active {
 main .container footer {
   background-color: var(--primary-color);
   color: #fff;
-  border: 1px solid var(--primary-color);
   padding: 10px 5px;
   width: 100%;
 }
@@ -434,10 +438,6 @@ main .container footer button {
   color: #fff;
 }
 
-.warning .options {
-  background: linear-gradient(to right, var(--secondary-color), #FDE1E2);
-}
-
 /* Highlight the title and the duration aswell */
 .warning + .task-details > div p:first-child, 
 .warning + .task-details > div p:first-child span,
@@ -445,6 +445,10 @@ main .container footer button {
   color: var(--secondary-color);
 }
 /* End dashboard <main> styles */
+.warning:hover {
+  background-color: #fff;
+  color: var(--secondary-color);
+}
 
 /* Modal styles (add/edit form) */
 .modal-bg {
@@ -604,11 +608,69 @@ input, textarea {
   background: var(--secondary-hover-bg);
 }
 /* End of task btn styles */
+/* Delete pop-up styles */
+.pop-up {
+  width: 315px;
+  background: #fff;
+  border-radius: var(--main-border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 
+.pop-up p {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.pop-up .buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.pop-up .buttons button {
+  min-width: 130px;
+}
+
+.pop-up .buttons button:first-child {
+  background-color: var(--secondary-color);
+}
+
+
+.pop-up .buttons button:first-child:hover {
+  background-color: var(--secondary-hover-bg);
+}
+
+.pop-up .buttons button:last-child {
+  background-color: var(--primary-color);
+}
+
+.pop-up .buttons button:last-child:hover {
+  background-color: var(--primary-hover-bg);
+}
+/* End of delete pop-up styles */
 @media only screen and (min-width: 600px) {
   main .container {
     border-radius: var(--main-border-radius);
     width: 550px;
+  }
+
+  main .container .set input {
+    width: 60px;
+    height: 30px;
+    text-align: center;
+  }
+
+  main .container > div button {
+    width: 60px;
+    height: 30px;
+  }
+
+  .set-input-wrapper {
+    width: 115px;
   }
 
   .task-list {
@@ -637,41 +699,12 @@ input, textarea {
     border-right: 1px solid #000;
   }
 
-  .task-list {
-    min-height: 400px;
-  }
-
-  main .container > div {
-    height: 50px;
-  }
-
-  main .container .set input {
-    width: 100px;
-    padding: 6px 4px;
-    height: auto;
-  }
-  
-  main .container div button {
-    height: auto;
-    width: 80px;
-    padding: 6px 0px;
-  }
-
   .task-form-container {
     width: 450px;
   }
 
   .mobile-add-task-btn {
     display: none;
-  }
-
-  .set-input-wrapper {
-    width: 115px;
-    justify-content: flex-start;
-  }
-
-  .set-input-wrapper input {
-    margin-left: 5px;
   }
 
   .set-inactive {

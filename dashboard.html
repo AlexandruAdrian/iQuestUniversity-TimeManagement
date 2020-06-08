@@ -80,7 +80,7 @@
 
   <button class="mobile-add-task-btn">+</button>
 
-  <div class="modal-bg">
+  <div class="modal-bg" id="form-modal">
     <div class="task-form-container">
       <form class="task-form" autocomplete="off">
         <div class="task-input-wrapper">
@@ -112,6 +112,17 @@
 
       <div class="close-task-form"><span class="fas fa-times"></span></div>
     </div>
+  </div>
+
+  <div class="modal-bg" id="delete-pop-up">
+    <div class="pop-up">
+      <p>Are you sure you want to delete <strong id="pop-up-title"></strong> ?</p>
+      <div class="buttons">
+        <button id="delete" class="btn">Delete</button>
+        <button id="cancel" class="btn">Cancel</button>
+      </div>
+    </div>
+
   </div>
 
   <footer class="main-footer">
