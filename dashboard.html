@@ -42,14 +42,14 @@
   </nav>
 
   <main>
-    <section class="container">
-      <header>
-        <figure>
-          <img src="images/logo.png" alt="time management logo">
-        </figure>
-        <h1>Time <span>Management</span></h1>
-      </header>
+    <div class="main-logo-wrapper">
+      <figure class="logo">
+        <img src="images/logo.png" alt="time management logo">
+      </figure>
+      <h1>Time <span>Management</span></h1>
+    </div>
 
+    <header>
       <div>
         <form class="set set-active">
           <div class="set-input-wrapper">
@@ -64,18 +64,20 @@
         </form>
         <div class="unset unset-inactive">
           <p>Current set limit: <span id="time-limit">none</span></p>
-          <button id="unset-time-limit">Unset</button>
+          <button tabindex="-1" id="unset-time-limit">Unset</button>
         </div>
       </div>
+    </header>
 
-      <ul class="task-list">
-      </ul>
+    <ul class="task-list">
+    </ul>
 
-      <footer>
+    <footer>
+      <div>
         <p>Total working hours: <span id="total-hours">0 hrs 0 min</span></p>
         <button id="dekstop-add-task-btn">Add task</button>
-      </footer>
-    </section>
+      </div>
+    </footer>
   </main>
 
   <button class="mobile-add-task-btn">+</button>
@@ -106,6 +108,10 @@
             <input type="number" name="task-mins" id="task-mins" min="0" max="59" placeholder="0">
           </div>
           <p class="error"></p>
+        </div>
+        <div>
+          <input type="checkbox" id="keep-open" name="keep-open">
+          <label for="keep-open">Keep open</label>
         </div>
         <button class="btn">Submit</button>
       </form>

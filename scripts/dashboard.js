@@ -121,6 +121,7 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const hoursInput = document.getElementById("task-hrs");
 const minutesInput = document.getElementById("task-mins");
+const keepOpenInput = document.getElementById("keep-open");
 const submitBtn = document.querySelector(".task-form").lastElementChild;
 const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
@@ -152,6 +153,9 @@ function initTimeLimitHandlers() {
   limitHrs.addEventListener("focus", handleFocus);
   limitMins.addEventListener("focus", handleFocus);
 
+  limitHrs.addEventListener("blur", handleNumberInputBlur);
+  limitMins.addEventListener("blur", handleNumberInputBlur);
+
   limitHrs.addEventListener("input", handleNumberInputLength);
   limitMins.addEventListener("input", handleNumberInputLength);
 
@@ -176,6 +180,9 @@ function initModalHandlers() {
   descriptionInput.addEventListener("focus", handleFocus);
   hoursInput.addEventListener("focus", handleFocus);
   minutesInput.addEventListener("focus", handleFocus);
+
+  hoursInput.addEventListener("blur", handleNumberInputBlur);
+  minutesInput.addEventListener("blur", handleNumberInputBlur);
 
   hoursInput.addEventListener("input", handleNumberInputLength);
   minutesInput.addEventListener("input", handleNumberInputLength);
@@ -240,14 +247,20 @@ function handleTaskAdd(e) {
   const descriptionValue = descriptionInput.value;
   const hoursValue = parseInt(hoursInput.value);
   const minutesValue = parseInt(minutesInput.value);
+  const keepOpen = keepOpenInput.checked;
+
   if (validateTaskForm()) {
     // Create a new task
     const task = new Task(taskCtr++, titleValue.trim(), descriptionValue.trim(), hoursValue, minutesValue);
     taskList.addTask(task)
     titleInput.focus();
-    // Reset inputs
-    resetForm();
     // Refresh task list
+    if (!keepOpen) {
+      handleCloseAddForm();
+    } else {
+      // Reset inputs
+      resetForm();
+    }
     initList();
   }
 }
@@ -325,6 +338,12 @@ function handleFocus() {
       break;
     default:
       break;
+  }
+}
+
+function handleNumberInputBlur() {
+  if (this.value.length === 0) {
+    this.value = 0;
   }
 }
 

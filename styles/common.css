@@ -1,8 +1,8 @@
 :root {
   --primary-color: rgb(2, 90, 162);
   --secondary-color: rgb(230, 80, 92);
-  --primary-hover-bg: rgba(2, 90, 162, .9);
-  --secondary-hover-bg: rgba(230, 80, 92, .9);
+  --primary-hover-bg: rgba(2, 90, 162, .8);
+  --secondary-hover-bg: rgba(230, 80, 92, .8);
   --main-border-radius: 5px;
   --font: 'Montserrat', sans-serif;
 }
@@ -40,7 +40,7 @@ body {
 .container {
   width: 100%;
   height: 100%;
-  padding: 25px 5px;
+  padding: 20px 5px 0px 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,19 +61,18 @@ body {
 }
 
 .main-footer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 5px 0;
-  height: 40px;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  height: 60px;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   color: var(--primary-color);
   font-size: 12px;
   background: #fff;
+  padding-bottom: 10px
 }
 
 .input-error {
