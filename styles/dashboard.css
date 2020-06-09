@@ -165,7 +165,6 @@ main .btn:hover {
   color: var(--secondary-color)
 }
 
-
 /* Task list styles */
 main header > div {
   width: 100%;
@@ -530,7 +529,6 @@ input, textarea {
 }
 
 .task-form div:nth-child(5) {
-  display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;

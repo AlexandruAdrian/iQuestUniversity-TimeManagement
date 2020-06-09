@@ -122,6 +122,7 @@ const descriptionInput = document.getElementById("description");
 const hoursInput = document.getElementById("task-hrs");
 const minutesInput = document.getElementById("task-mins");
 const keepOpenInput = document.getElementById("keep-open");
+const keepOpenContainer = keepOpenInput.parentElement;
 const submitBtn = document.querySelector(".task-form").lastElementChild;
 const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
@@ -213,6 +214,7 @@ function handleOpenAddForm() {
   titleInput.focus();
   closeForm.addEventListener("click", handleCloseAddForm);
   submitBtn.addEventListener("click", handleTaskAdd);
+  toggleClass(keepOpenContainer, "hide", "show");
 }
 
 function handleOpenEditForm() {
@@ -220,6 +222,7 @@ function handleOpenEditForm() {
   titleInput.focus();
   closeForm.addEventListener("click", handleCloseEditForm);
   submitBtn.addEventListener("click", handleTaskEdit);
+  toggleClass(keepOpenContainer, "show", "hide");
 }
 
 function handleCloseAddForm() {
