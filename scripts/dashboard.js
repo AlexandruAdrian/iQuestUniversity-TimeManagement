@@ -1,30 +1,30 @@
 class TaskList {
-  #tasks;
-  #timeLimit;
-  #totalHrs;
+  tasks;
+  timeLimit;
+  totalHrs;
 
   constructor(tasks = []) {
-    this.#tasks = [...tasks];
-    this.#timeLimit = {
+    this.tasks = [...tasks];
+    this.timeLimit = {
       hrs: 999999,
       min: 0
     }
-    this.#totalHrs = {
+    this.totalHrs = {
       hrs: 0,
       min: 0
     }
   }
 
   addTask(task) {
-    this.#tasks = [task, ...this.#tasks];
+    this.tasks = [task, ...this.tasks];
   }
 
   removeTask(taskId) {
-    this.#tasks = this.#tasks.filter(task => task.getId() !== taskId);
+    this.tasks = this.tasks.filter(task => task.getId() !== taskId);
   }
 
   editTask(newTask) {
-    this.#tasks.forEach(task => {
+    this.tasks.forEach(task => {
       if (task.getId() === newTask.getId()) {
         task.setTitle(newTask.getTitle());
         task.setDescription(newTask.getDescription());
@@ -37,68 +37,68 @@ class TaskList {
   }
 
   resetTotal() {
-    this.#totalHrs.hrs = 0;
-    this.#totalHrs.min = 0;
+    this.totalHrs.hrs = 0;
+    this.totalHrs.min = 0;
   }
   getTask(id) {
-    return this.#tasks.find(task => task.getId() === id);
+    return this.tasks.find(task => task.getId() === id);
   }
-  getTasks() { return this.#tasks; }
-  getTasksLength() { return this.#tasks.length };
-  getTimeLimit() { return this.#timeLimit; }
-  getTotalHrs() { return this.#totalHrs; }
+  getTasks() { return this.tasks; }
+  getTasksLength() { return this.tasks.length };
+  getTimeLimit() { return this.timeLimit; }
+  getTotalHrs() { return this.totalHrs; }
 
   setTimeLimit(hours = 0, minutes = 0) {
-    this.#timeLimit.hrs = hours;
-    this.#timeLimit.min = minutes;
+    this.timeLimit.hrs = hours;
+    this.timeLimit.min = minutes;
   }
 
   setTotalHrs(hours, minutes) {
-    this.#totalHrs.hrs += hours;
-    this.#totalHrs.min += minutes;
-    if (this.#totalHrs.min > 59) {
-      this.#totalHrs.hrs += 1;
-      this.#totalHrs.min %= 60;
+    this.totalHrs.hrs += hours;
+    this.totalHrs.min += minutes;
+    if (this.totalHrs.min > 59) {
+      this.totalHrs.hrs += 1;
+      this.totalHrs.min %= 60;
     }
   }
 }
 
 class Task {
-  #id;
-  #title;
-  #description;
-  #hours;
-  #minutes;
-  #date;
+  id;
+  title;
+  description;
+  hours;
+  minutes;
+  date;
 
   constructor(id = -1, title = '', description = '', hours = 0, minutes = 0) {
-    this.#id = id;
-    this.#title = title;
-    this.#description = description;
-    this.#hours = hours;
-    this.#minutes = minutes;
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.hours = hours;
+    this.minutes = minutes;
 
     const currentDate = new Date();
-    this.#date = {
+    this.date = {
       day: currentDate.getDate(),
       month: currentDate.getMonth(),
       year: currentDate.getFullYear()
     }
   }
 
-  getId() { return this.#id; }
-  getTitle() { return this.#title; }
-  getDescription() { return this.#description; }
-  getHours() { return this.#hours; }
-  getMinutes() { return this.#minutes; }
-  getDate() { return this.#date; }
+  getId() { return this.id; }
+  getTitle() { return this.title; }
+  getDescription() { return this.description; }
+  getHours() { return this.hours; }
+  getMinutes() { return this.minutes; }
+  getDate() { return this.date; }
 
-  setId(id) { this.#id = id; }
-  setTitle(title) { this.#title = title; }
-  setDescription(description) { this.#description = description; }
-  setHours(hours) { this.#hours = hours; }
-  setMinutes(minutes) { this.#minutes = minutes; }
-  setDate(date) { this.#date = date; }
+  setId(id) { this.id = id; }
+  setTitle(title) { this.title = title; }
+  setDescription(description) { this.description = description; }
+  setHours(hours) { this.hours = hours; }
+  setMinutes(minutes) { this.minutes = minutes; }
+  setDate(date) { this.date = date; }
 }
 
 const taskList = new TaskList([]);
@@ -159,9 +159,6 @@ function initTimeLimitHandlers() {
   limitHrs.addEventListener("input", handleNumberInputLength);
   limitMins.addEventListener("input", handleNumberInputLength);
 
-  limitHrs.addEventListener("keydown", handleKeydown);
-  limitMins.addEventListener("keydown", handleKeydown);
-
   setLimitBtn.addEventListener("click", handleSetBtn);
   unsetLimitBtn.addEventListener("click", handleUnsetBtn);
 }
@@ -186,8 +183,6 @@ function initModalHandlers() {
 
   hoursInput.addEventListener("input", handleNumberInputLength);
   minutesInput.addEventListener("input", handleNumberInputLength);
-  hoursInput.addEventListener("keydown", handleKeydown);
-  minutesInput.addEventListener("keydown", handleKeydown);
 }
 
 function initPopUpHandlers() {
@@ -228,14 +223,15 @@ function handleOpenEditForm() {
 }
 
 function handleCloseAddForm() {
-  resetForm();
+  resetTaskForm();
+  keepOpenInput.checked = false;
   formModal.classList.remove("modal-bg-active");
   closeForm.removeEventListener("click", handleCloseAddForm);
   submitBtn.removeEventListener("click", handleTaskAdd);
 }
 
 function handleCloseEditForm() {
-  resetForm();
+  resetTaskForm();
   formModal.classList.remove("modal-bg-active");
   closeForm.removeEventListener("click", handleCloseEditForm);
   submitBtn.removeEventListener("click", handleTaskEdit);
@@ -259,7 +255,7 @@ function handleTaskAdd(e) {
       handleCloseAddForm();
     } else {
       // Reset inputs
-      resetForm();
+      resetTaskForm();
     }
     initList();
   }
@@ -308,7 +304,7 @@ function handleSetBtn(e) {
 }
 
 function handleUnsetBtn() {
-  taskList.setTimeLimit(999999, 0);
+  taskList.setTimeLimit(99999, 0);
   toggleClass(unsetLimitContainer, "unset-active", "unset-inactive");
   toggleClass(setLimitContainer, "set-inactive", "set-active")
   timeLimit.innerHTML = `none`;
@@ -398,16 +394,13 @@ function validateNumberType(hrs, mins) {
 }
 // Fires on 'oninput' event
 function handleNumberInputLength(e) {
-  if (this.value.length > 2) {
+  const regex = /[0-9]/g;
+  if (!regex.test(this.value)) {
     this.value = this.value.slice(0, 2);
   }
-}
-// Makes sure the user cannot enter 'e', 'E', '-', '+' or '.' in the number type inputs
-function handleKeydown(e) {
-  const invalidChars = ['e', '-', '+', 'E', '.'];
 
-  if (invalidChars.includes(e.key)) {
-    e.preventDefault();
+  if (this.value.length > 2) {
+    this.value = this.value.slice(0, 2);
   }
 }
 
@@ -441,7 +434,7 @@ function validateTaskForm() {
   return validateInput(titleInput) && validateInput(descriptionInput) && validateInput(hoursInput) && validateInput(minutesInput);
 }
 
-function resetForm() {
+function resetTaskForm() {
   titleInput.classList.remove("input-error");
   descriptionInput.classList.remove("input-error");
   hoursInput.classList.remove("input-error");

@@ -285,10 +285,11 @@ main header > div button:active {
 
 .task-list {
   width: 100%;
-  min-height: calc(100vh - 230px);
+  height: calc(100vh - 230px);
   background-color: #fff;
   margin-top: 170px;
-  padding-bottom: 55px;
+  padding-bottom: 40px;
+  overflow-y: auto;
 }
 
 .task-list li {
@@ -544,8 +545,6 @@ input, textarea {
 .task-form div:nth-child(5) input {
   cursor: pointer;
 }
-
-
 
 .task-time {
   width: 100%;
