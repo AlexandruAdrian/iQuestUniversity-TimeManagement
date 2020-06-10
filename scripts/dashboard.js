@@ -179,6 +179,8 @@ function initModalHandlers() {
   hoursInput.addEventListener("focus", handleFocus);
   minutesInput.addEventListener("focus", handleFocus);
 
+  titleInput.addEventListener("blur", handleBlur);
+  descriptionInput.addEventListener("blur", handleBlur);
   hoursInput.addEventListener("blur", handleNumberInputBlur);
   minutesInput.addEventListener("blur", handleNumberInputBlur);
 
@@ -340,10 +342,16 @@ function handleFocus() {
   }
 }
 
+function handleBlur() {
+  validateInput(this);
+}
+
 function handleNumberInputBlur() {
   if (this.value.length === 0) {
     this.value = 0;
   }
+
+  validateInput(this);
 }
 
 function handleTaskList(e) {
