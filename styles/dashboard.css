@@ -274,7 +274,8 @@ main header > div button:active {
 .task-list {
   width: 100%;
   height: calc(100vh - 275px);
-  background-color: #fff;
+  min-height: 150px;
+  background-color: #f2f0ff;
   overflow-y: auto;
 }
 
@@ -292,6 +293,7 @@ main header > div button:active {
   cursor: pointer;
   border-bottom: 1px solid #000;
   transition: all .3s ease;
+  background-color: #fff;
 }
 
 .task-preview:hover {
@@ -382,9 +384,9 @@ main header > div button:active {
 
 .task-title {
   text-align: center;
-  margin-top: 5px;
+  margin-top: 10px;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .task-description {
@@ -392,7 +394,7 @@ main header > div button:active {
   text-align: justify;
   text-justify: inter-word;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .task-details > div {
@@ -672,6 +674,10 @@ input, textarea {
     width: 450px;
   }
 
+  .user {
+    margin-right: 15px;
+  }
+
   main header, main footer {
     width: 590px;
     margin: 0 auto;
@@ -698,7 +704,7 @@ input, textarea {
   }
   
   main header div .set input {
-    width: 60px;
+    width: 45px;
     height: 30px;
     text-align: center;
   }
@@ -717,52 +723,10 @@ input, textarea {
     width: 350px;
   }
 
-}
-
-@media only screen and (min-width: 1000px) {
-  .menu {
-    width: 300px;
-    border-right: 1px solid #000;
-  }
-
-  main header, main footer {
-    width: 800px;
-  }
-
-  .task-list {
-    width: 800px;
-    padding-bottom: 70px;
-  }
-
-  .task-form-container {
-    width: 450px;
-  }
-
   .mobile-add-task-btn {
     display: none;
   }
 
-  .set-inactive {
-    top: -50px;
-  }
-
-  .unset-inactive {
-    top: 50px;
-  }
-
-  .task-preview {
-    height: 50px;
-  }
-
-  .task-preview > p {
-    width: calc(100% - 130px);
-    line-height: 50px;
-  }
-
-  .options {
-    width: 100px;
-  }
-  
   main footer div {
     display: flex;
     justify-content: space-between;
@@ -789,6 +753,51 @@ input, textarea {
   main footer div button:active {
     box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,0.75);
   }  
+}
+
+@media only screen and (min-width: 1000px) {
+  .user {
+    margin-right: 20px;
+  }
+
+  .menu {
+    width: 300px;
+    border-right: 1px solid #000;
+  }
+
+  main header, main footer {
+    width: 800px;
+  }
+
+  .task-list {
+    width: 800px;
+  }
+
+  .task-form-container {
+    width: 450px;
+  }
+
+  .set-inactive {
+    top: -50px;
+  }
+
+  .unset-inactive {
+    top: 50px;
+  }
+
+  .task-preview {
+    height: 50px;
+  }
+
+  .task-preview > p {
+    width: calc(100% - 130px);
+    line-height: 50px;
+  }
+
+  .options {
+    width: 100px;
+  }
+  
   .task-form .error {
     font-size: 14px;
   }
