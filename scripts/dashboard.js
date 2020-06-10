@@ -121,8 +121,8 @@ const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const hoursInput = document.getElementById("task-hrs");
 const minutesInput = document.getElementById("task-mins");
-const keepOpenInput = document.getElementById("keep-open");
-const keepOpenContainer = keepOpenInput.parentElement;
+const createAnotherInput = document.getElementById("create-another");
+const createAnotherContainer = createAnotherInput.parentElement;
 const submitBtn = document.querySelector(".task-form").lastElementChild;
 const errors = document.querySelectorAll(".error");
 const htmlList = document.querySelector(".task-list");
@@ -214,7 +214,7 @@ function handleOpenAddForm() {
   titleInput.focus();
   closeForm.addEventListener("click", handleCloseAddForm);
   submitBtn.addEventListener("click", handleTaskAdd);
-  toggleClass(keepOpenContainer, "hide", "show");
+  toggleClass(createAnotherContainer, "hide", "show");
 }
 
 function handleOpenEditForm() {
@@ -222,12 +222,12 @@ function handleOpenEditForm() {
   titleInput.focus();
   closeForm.addEventListener("click", handleCloseEditForm);
   submitBtn.addEventListener("click", handleTaskEdit);
-  toggleClass(keepOpenContainer, "show", "hide");
+  toggleClass(createAnotherContainer, "show", "hide");
 }
 
 function handleCloseAddForm() {
   resetTaskForm();
-  keepOpenInput.checked = false;
+  createAnotherInput.checked = false;
   formModal.classList.remove("modal-bg-active");
   closeForm.removeEventListener("click", handleCloseAddForm);
   submitBtn.removeEventListener("click", handleTaskAdd);
@@ -246,7 +246,7 @@ function handleTaskAdd(e) {
   const descriptionValue = descriptionInput.value;
   const hoursValue = parseInt(hoursInput.value);
   const minutesValue = parseInt(minutesInput.value);
-  const keepOpen = keepOpenInput.checked;
+  const createAnother = createAnotherInput.checked;
 
   if (validateTaskForm()) {
     // Create a new task
@@ -254,7 +254,7 @@ function handleTaskAdd(e) {
     taskList.addTask(task)
     titleInput.focus();
     // Refresh task list
-    if (!keepOpen) {
+    if (!createAnother) {
       handleCloseAddForm();
     } else {
       // Reset inputs

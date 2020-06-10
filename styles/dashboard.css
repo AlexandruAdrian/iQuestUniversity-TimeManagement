@@ -169,6 +169,11 @@ main header > div {
   display: flex;
   width: 210px;
   justify-content: space-between;
+  align-items: center;
+}
+
+.set-inputs > p {
+  display: none;
 }
 
 .set-input-wrapper {
@@ -698,7 +703,11 @@ body div:nth-child(7) button:hover {
   }
 
   .set-inputs {
-    width: 250px;
+    width: 430px;
+  }
+
+  .set-inputs > p {
+    display: flex;
   }
 
   main header > div {
@@ -772,6 +781,10 @@ body div:nth-child(7) button:hover {
 @media only screen and (min-width: 1000px) {
   .user {
     margin-right: 20px;
+  }
+
+  .set-inputs {
+    width: 550px;
   }
 
   .menu {
