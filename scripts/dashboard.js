@@ -40,9 +40,11 @@ class TaskList {
     this.totalHrs.hrs = 0;
     this.totalHrs.min = 0;
   }
+
   getTask(id) {
     return this.tasks.find(task => task.getId() === id);
   }
+
   getTasks() { return this.tasks; }
   getTasksLength() { return this.tasks.length };
   getTimeLimit() { return this.timeLimit; }
