@@ -421,9 +421,9 @@ function validateInput(input) {
     if (input.value.trim().length < 1) {
       input.classList.add("input-error");
       if (input.id === "title") {
-        errors[0].innerHTML = "Title cannot be empty";
+        errors[0].innerHTML = "Title field is required";
       } else {
-        errors[1].innerHTML = "Description cannot be empty";
+        errors[1].innerHTML = "Description field is required";
       }
 
       isValid = false;
