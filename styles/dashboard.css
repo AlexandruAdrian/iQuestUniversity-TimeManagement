@@ -1,13 +1,10 @@
-.main-footer {
-  background-color: #f2f2f2;
+body, .main-footer {
+  background-color: #f2f0f5;
 }
+
 
 /* Header styles */
 .dashboard-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 2;
   width: 100%;
   height: 45px;
   background-color: var(--primary-color);
@@ -109,17 +106,7 @@ main {
 
 main header, main footer {
   width: 100%;
-  height: auto;
-  z-index: 2;
-  position: fixed;
-}
-
-main header {
-  top: 100px;
-}
-
-main footer {
-  bottom: 60px;
+  height: 50px;
 }
 
 main .btn {
@@ -142,10 +129,7 @@ main .btn:hover {
   align-items: center;
   justify-content: center;
   width: 100%;
-  position: fixed;
-  top: 45px;
-  padding: 15px 0;
-  z-index: 2;
+  padding: 20px 0;
   background-color: #f2f0f5;
 }
 
@@ -178,8 +162,13 @@ main header > div {
   overflow: hidden;
   color: #fff;
   border: 1px solid var(--primary-color);
-  margin-top: 20px;
   padding: 0 10px;
+}
+
+.set-inputs {
+  display: flex;
+  width: 210px;
+  justify-content: space-between;
 }
 
 .set-input-wrapper {
@@ -284,10 +273,8 @@ main header > div button:active {
 
 .task-list {
   width: 100%;
-  height: calc(100vh - 230px);
+  height: calc(100vh - 275px);
   background-color: #fff;
-  margin-top: 170px;
-  padding-bottom: 40px;
   overflow-y: auto;
 }
 
@@ -427,6 +414,9 @@ main footer > div {
   color: #fff;
   padding: 10px;
   width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 main footer > div span {
@@ -678,18 +668,17 @@ input, textarea {
 }
 /* End of delete pop-up styles */
 @media only screen and (min-width: 600px) {
-  body {
-    background-color: #f2f0f5;
-  }
-
   .pop-up {
     width: 450px;
   }
 
   main header, main footer {
     width: 590px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto;
+  }
+
+  .set-inputs {
+    width: 250px;
   }
 
   main header > div {
@@ -705,16 +694,7 @@ input, textarea {
   .task-list {
     width: 590px;
     border: 1px solid var(--primary-color);
-    margin: 190px auto 0 auto;
-    
-  }
-
-  .main-logo-wrapper {
-    padding: 25px 0;
-  }
-
-  main header {
-    top: 120px;
+    margin: 0 auto;
   }
   
   main header div .set input {
