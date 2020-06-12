@@ -63,7 +63,6 @@ class TaskList {
   getTotalHrs() { return this.totalHrs; }
 
   setTimeLimit(hours = 0, minutes = 0) {
-    localStorage.setItem("time-limit", JSON.stringify({ hrs: hours, min: minutes }));
     this.timeLimit.hrs = hours;
     this.timeLimit.min = minutes;
   }
@@ -329,6 +328,7 @@ function handleSetBtn(e) {
     const hours = parseInt(setHours.value);
     const minutes = parseInt(setMinutes.value);
     taskList.setTimeLimit(hours, minutes);
+    localStorage.setItem("time-limit", JSON.stringify({ hrs: hours, min: minutes }));
     timeLimit.innerHTML = `${hours} hrs ${minutes} min`;
     toggleClass(setLimitContainer, "set-active", "set-inactive")
     toggleClass(unsetLimitContainer, "unset-inactive", "unset-active");
@@ -338,6 +338,7 @@ function handleSetBtn(e) {
 
 function handleUnsetBtn() {
   taskList.setTimeLimit(99999, 0);
+  localStorage.removeItem("time-limit");
   toggleClass(unsetLimitContainer, "unset-active", "unset-inactive");
   toggleClass(setLimitContainer, "set-inactive", "set-active")
   timeLimit.innerHTML = `none`;
