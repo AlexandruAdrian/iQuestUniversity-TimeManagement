@@ -4,10 +4,22 @@ class TaskList {
   totalHrs;
 
   constructor(tasks = []) {
+    if (localStorage.getItem("tasks")) {
+      tasks = JSON.parse(localStorage.getItem("tasks")).map(t => {
+        const task = new Task(t.id, t.title, t.description, t.hours, t.minutes);
+        return task;
+      })
+    }
+
     this.tasks = [...tasks];
-    this.timeLimit = {
-      hrs: 999999,
-      min: 0
+
+    if (localStorage.getItem("time-limit")) {
+      this.timeLimit = JSON.parse(localStorage.getItem("time-limit"));
+    } else {
+      this.timeLimit = {
+        hrs: 999999,
+        min: 0
+      }
     }
     this.totalHrs = {
       hrs: 0,
@@ -51,6 +63,7 @@ class TaskList {
   getTotalHrs() { return this.totalHrs; }
 
   setTimeLimit(hours = 0, minutes = 0) {
+    localStorage.setItem("time-limit", JSON.stringify({ hrs: hours, min: minutes }));
     this.timeLimit.hrs = hours;
     this.timeLimit.min = minutes;
   }
@@ -134,13 +147,23 @@ const popUpTitle = document.getElementById("pop-up-title");
 const popupDeleteBtn = document.getElementById("delete");
 const popupCancelBtn = document.getElementById("cancel");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-let taskCtr = 1; // Generate ID for each task
+let taskCtr = localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks"))[0].id + 1 : 1; // Generate ID for each task
 let taskToEdit = -1; // Holds ID for the edit 
 let taskToRemove = -1; // Holds ID for removal
 
 (() => {
   initList();
   initEventHandlers();
+
+  if (localStorage.getItem("time-limit")) {
+    const { hrs, min } = JSON.parse(localStorage.getItem("time-limit"));
+    if (!(hrs < 0 && min < 0)) {
+      taskList.setTimeLimit(hrs, min);
+      timeLimit.innerHTML = `${hrs} hrs ${min} min`;
+      toggleClass(setLimitContainer, "set-active", "set-inactive");
+      toggleClass(unsetLimitContainer, "unset-inactive", "unset-active");
+    }
+  }
 })();
 
 function initEventHandlers() {
@@ -256,6 +279,7 @@ function handleTaskAdd(e) {
     // Create a new task
     const task = new Task(taskCtr++, titleValue.trim(), descriptionValue.trim(), hoursValue, minutesValue);
     taskList.addTask(task)
+    localStorage.setItem("tasks", JSON.stringify(taskList.getTasks()));
     titleInput.focus();
     // Refresh task list
     if (!createAnother) {
@@ -277,6 +301,7 @@ function handleTaskEdit(e) {
   if (validateTaskForm()) {
     const newTask = new Task(taskToEdit, titleValue.trim(), descriptionValue.trim(), hoursValue, minutesValue);
     taskList.editTask(newTask);
+    localStorage.setItem("tasks", JSON.stringify(taskList.getTasks()));
     // Remove listeners and reset form
     handleCloseEditForm();
     initList();
@@ -285,6 +310,7 @@ function handleTaskEdit(e) {
 
 function handleTaskDelete() {
   taskList.removeTask(taskToRemove);
+  localStorage.setItem("tasks", JSON.stringify(taskList.getTasks()));
   popUpTitle.innerHTML = '';
   initList();
   deletePopup.classList.remove("modal-bg-active");
