@@ -146,7 +146,9 @@ const popUpTitle = document.getElementById("pop-up-title");
 const popupDeleteBtn = document.getElementById("delete");
 const popupCancelBtn = document.getElementById("cancel");
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-let taskCtr = localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks"))[0].id + 1 : 1; // Generate ID for each task
+let taskCtr =
+  localStorage.getItem("tasks") && JSON.parse(localStorage.getItem("tasks")).length > 0 ?
+    JSON.parse(localStorage.getItem("tasks"))[0].id : 1; // Generate ID for each task
 let taskToEdit = -1; // Holds ID for the edit 
 let taskToRemove = -1; // Holds ID for removal
 
